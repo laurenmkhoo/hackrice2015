@@ -24,4 +24,9 @@
         android:layout_height="wrap_content"
         android:clickable="false"/>
 
+    <Button android:text="@string/main_btn_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onMessageButtonClick" />
+
 </LinearLayout>

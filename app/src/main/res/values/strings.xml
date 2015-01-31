@@ -7,6 +7,7 @@
     <string name="main_activity_name">Welcome to the TextStat app!</string>
     <string name="main_btn_see_current_stats">Current Text Stats</string>
     <string name="main_btn_analyze_texts">Analyze Texts</string>
+    <string name="main_btn_messages">Messages</string>
     <string name="action_settings">Settings</string>
 
     <!-- Statistics Page -->
@@ -17,13 +18,17 @@
 
     <!-- Drawer Labels -->
     <string name="title_profanity">Most Profane</string>
-    <string name="title_vanity">Most Vane</string>
+    <string name="title_vanity">Most Vain</string>
     <string name="title_food_love">Foodies</string>
     <string name="title_anger">Most Angry</string>
     <string name="title_party">Party Hardy</string>
     <string name="title_quick_texter">Fast Responder</string>
     <string name="title_slow_texter">Slow Responder</string>
+<<<<<<< HEAD
     <string name="title_activity_rankings">Rankings</string>
+=======
+    <string name="title_activity_message_list">MessageListActivity</string>
+>>>>>>> origin/master
     <string name="hello_world">Hello world!</string>
 
 </resources>
