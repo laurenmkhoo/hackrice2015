@@ -11,13 +11,12 @@
 
     <TextView android:text="@string/main_activity_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"/>
+        android:layout_height="wrap_content"/>
 
     <Button android:text="@string/main_btn_see_current_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="analyzeTexts"/>
+        android:onClick="goToRankings"/>
 
     <Button android:text="@string/main_btn_analyze_texts"
         android:layout_width="wrap_content"

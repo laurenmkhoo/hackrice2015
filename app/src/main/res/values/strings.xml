@@ -24,7 +24,8 @@
     <string name="title_party">Party Hardy</string>
     <string name="title_quick_texter">Fast Responder</string>
     <string name="title_slow_texter">Slow Responder</string>
-    <string name="title_activity_message_list">MessageListActivity</string>
     <string name="hello_world">Hello world!</string>
+
+    <string name="title_activity_message_list">Activity Message List</string>
 
 </resources>
