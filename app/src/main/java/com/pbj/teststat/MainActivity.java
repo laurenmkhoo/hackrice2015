@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
         // TODO actually get some statistics first
 
         // Open the statistics page!
-        startActivity(new Intent(this, StatisticsPage.class));
+        startActivity(new Intent(this, Rankings.class));
 
     }
 }

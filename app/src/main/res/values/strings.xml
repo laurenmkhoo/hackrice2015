@@ -15,7 +15,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
 
-    <!-- Drawer Labels-->
+    <!-- Drawer Labels -->
     <string name="title_profanity">Most Profane</string>
     <string name="title_vanity">Most Vane</string>
     <string name="title_food_love">Foodies</string>
@@ -23,6 +23,7 @@
     <string name="title_party">Party Hardy</string>
     <string name="title_quick_texter">Fast Responder</string>
     <string name="title_slow_texter">Slow Responder</string>
-
+    <string name="title_activity_rankings">Rankings</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
