@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">TestStat</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="main_activity_name">Welcome to the TextStat app!</string>
+    <string name="main_activity_button">Analyze all my Texts!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
