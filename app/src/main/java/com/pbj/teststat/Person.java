@@ -3,7 +3,9 @@ package com.pbj.teststat;
 
 import android.provider.ContactsContract;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +15,15 @@ public class Person {
 
     private String name; // may be superfluous
     private ContactsContract.Contacts myContact;
-    private Map<Category, Double> stats = new HashMap<>();
+    private Map<Category, Long> stats = new HashMap<>();
+
+    // Other statistics we need
+    private long totalMessages;
+    private long totalWords;
+    private long totalChars;
+    private long messagesToThem;
+    private long lastSentToThemTime;
+    private List<Long> responseTimes = new ArrayList<>();
 
 
     public String getName() {
@@ -21,12 +31,14 @@ public class Person {
     }
 
 
-    public update(String text) {
-        assert (text != null);
+    public void update(SMSData textMessage) {
+        assert (textMessage != null);
 
+        // Update each category
         for (Category cat : stats.keySet()) {
             stats.put(cat,
-                    stats.getOrDefault(cat, 0) + cat.countOccurances(text));
+                    stats.getOrDefault(cat, 0)
+                            + cat.countOccurances(textMessage.getBody()));
         }
     }
 
