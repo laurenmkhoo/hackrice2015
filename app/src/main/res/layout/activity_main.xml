@@ -9,13 +9,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/smsNumberText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="NUMBER_GOES_HERE">
-    </TextView>
-
     <TextView android:text="@string/main_activity_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,5 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"/>
+
+    <Button android:text="@string/main_btn_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onMessageButtonClick" />
 
 </LinearLayout>
