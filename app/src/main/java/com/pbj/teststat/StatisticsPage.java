@@ -62,13 +62,25 @@ public class StatisticsPage extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.title_profanity);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_vanity);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_food_love);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_anger);
+                break;
+            case 5:
+                mTitle = getString(R.string.title_party);
+                break;
+            case 6:
+                mTitle = getString(R.string.title_quick_texter);
+                break;
+            case 7:
+                mTitle = getString(R.string.title_slow_texter);
                 break;
         }
     }
