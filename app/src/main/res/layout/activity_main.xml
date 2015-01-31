@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/smsNumberText"
@@ -10,5 +15,20 @@
         android:layout_height="wrap_content"
         android:text="NUMBER_GOES_HERE">
     </TextView>
+
+    <TextView android:text="@string/main_activity_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"/>
+
+    <Button android:text="@string/main_btn_see_current_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="analyzeTexts"/>
+
+    <Button android:text="@string/main_btn_analyze_texts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"/>
 
 </LinearLayout>
