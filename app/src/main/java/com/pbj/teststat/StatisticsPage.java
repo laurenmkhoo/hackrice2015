@@ -45,6 +45,9 @@ public class StatisticsPage extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        // Add back button for menu bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
