@@ -25,7 +25,7 @@ public class MessageListActivity extends ListActivity {
 
         List<SMSData> smsList = new ArrayList<SMSData>();
 
-        Uri uri = Uri.parse("content://sms/inbox");
+        Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
         System.out.println("cursor c: " + c);
 
@@ -36,6 +36,15 @@ public class MessageListActivity extends ListActivity {
                 SMSData sms = new SMSData();
                 sms.setBody(c.getString(c.getColumnIndexOrThrow("body")).toString());
                 sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
+                sms.setId(c.getString(c.getColumnIndexOrThrow("_id")).toString());
+                sms.setTime(c.getString(c.getColumnIndexOrThrow("date")).toString());
+
+                if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
+                    sms.setFolderName("inbox");
+                } else {
+                    sms.setFolderName("sent");
+                }
+
                 smsList.add(sms);
 
                 c.moveToNext();

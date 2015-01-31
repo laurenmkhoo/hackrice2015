@@ -39,7 +39,11 @@ public class ListAdapter extends ArrayAdapter<SMSData> {
         View rowView = inflater.inflate(R.layout.activity_message_list, parent, false);
 
         TextView senderNumber = (TextView) rowView.findViewById(R.id.smsNumberText);
-        senderNumber.setText(smsList.get(position).getNumber() + "\n" + smsList.get(position).getBody());
+        senderNumber.setText(smsList.get(position).getNumber() + "\n"
+                + smsList.get(position).getBody() + "\n"
+                + smsList.get(position).getId() + "\n"
+                + smsList.get(position).getTime() + "\n"
+                + smsList.get(position).getFolderName());
 
         return rowView;
     }

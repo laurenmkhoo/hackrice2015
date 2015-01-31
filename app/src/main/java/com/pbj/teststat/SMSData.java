@@ -9,6 +9,9 @@ public class SMSData {
     private String number;
     // SMS text body
     private String body;
+    private String id;
+    private String time;
+    private String folderName;
 
     public String getNumber() {
         return number;
@@ -24,6 +27,30 @@ public class SMSData {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
     }
 
 }
