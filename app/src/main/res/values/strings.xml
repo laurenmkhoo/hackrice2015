@@ -24,11 +24,8 @@
     <string name="title_party">Party Hardy</string>
     <string name="title_quick_texter">Fast Responder</string>
     <string name="title_slow_texter">Slow Responder</string>
-<<<<<<< HEAD
-    <string name="title_activity_rankings">Rankings</string>
-=======
-    <string name="title_activity_message_list">MessageListActivity</string>
->>>>>>> origin/master
     <string name="hello_world">Hello world!</string>
+
+    <string name="title_activity_message_list">Activity Message List</string>
 
 </resources>

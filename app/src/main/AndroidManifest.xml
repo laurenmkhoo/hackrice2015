@@ -8,8 +8,11 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
+    <!--
+        why are there two different formats right here??
+        -->
     <uses-permission android:name="android.permission.READ_SMS" />
-
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
