@@ -9,7 +9,7 @@
         android:targetSdkVersion="16" />
 
     <!--
-        why are there two different formats right here?? i don't know. 
+        why are there two different formats right here?? i don't know.
         -->
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
