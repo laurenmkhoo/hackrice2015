@@ -2,9 +2,15 @@
 <resources>
 
     <string name="app_name">TestStat</string>
-
     <string name="main_activity_name">Welcome to the TextStat app!</string>
     <string name="main_activity_button">Analyze all my Texts!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_statistics_page">This is the Statistics Page</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
 
 </resources>
