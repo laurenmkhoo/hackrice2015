@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.app.Activity;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
@@ -93,19 +92,45 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (peopleList == null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_rankings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.rankings_to_home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(PEOPLE_LIST, peopleList);
-            startActivity(intent);
+        Intent intent;
+        switch (item.getItemId()) {
+
+           // Go Home
+            case R.id.rankings_to_home:
+                intent = new Intent(this, MainActivity.class);
+                break;
+
+            // Go to Friends list
+            case R.id.rankings_to_friends:
+                intent = new Intent(this, FriendsActivity.class);
+                break;
+
+            // Somehow nothing picked
+            default:
+                return super.onOptionsItemSelected(item);
         }
+
+        // Go where we decided to go
+        intent.putExtra(PEOPLE_LIST, peopleList);
+        startActivity(intent);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -152,12 +177,19 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
         public PersonWithRank(Person p, double value) {
             this.p = p;
+
             this.value = value;
+
         }
 
 
         public String toString() {
-            return p.getName() + "  " + value;
+            String display = p.getName();
+            if (display == "" || display == null){
+                display = p.getNumber();
+            }
+
+            return display + "  " + Math.floor(value * 100)/100;
         }
     }
 

@@ -54,7 +54,11 @@
         </activity>
         <activity
             android:name=".FriendProfile"
-            android:label="@string/title_activity_friend_profile" >
+            android:label="@string/title_activity_friend_profile"
+            android:parentActivityName=".FriendsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FriendsActivity"/>
         </activity>
     </application>
 

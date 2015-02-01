@@ -33,14 +33,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // font manipulation occurs from here
-        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.fun), "button");
+        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "button");
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
         for (int i = 0; i < views.size(); i++) {
             TextView tv = (TextView)(views.get(i));
             tv.setTypeface(tf);
         }
-        // More font manipulation
-        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.fun), "header");
+
+        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "header");
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_INLINE.otf");
         for (int i = 0; i < viewsBold.size(); i++) {
             TextView tvBold = (TextView)(viewsBold.get(i));
@@ -60,10 +60,6 @@ public class MainActivity extends ActionBarActivity {
                 getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
             peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
         }
-
-        // Turn off buttons when they won't work
-        ((Button) findViewById(R.id.main_btn_me)).setClickable(peopleList == null);
-        ((Button) findViewById(R.id.main_btn_friends)).setClickable(peopleList == null);
     }
 
 
@@ -79,12 +75,12 @@ public class MainActivity extends ActionBarActivity {
      * @param view the view
      */
     public void goToMyProfile(View view) {
-        if (MessageListActivity.getUserPerson() == null){
-            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        if (peopleList == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE first.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendProfile.class);
             intent.putExtra(FriendProfile.PERSON, MessageListActivity.userPerson);
-            intent.putExtra(Rankings.PEOPLE_LIST, peopleList); // why not?
+            intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
             startActivity(intent);
         }
     }
@@ -102,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
      * @param view
      */
     public void goToFriends(View view){
-        if (MessageListActivity.getSMSPeople() == null){
+        if (peopleList == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendsActivity.class);
