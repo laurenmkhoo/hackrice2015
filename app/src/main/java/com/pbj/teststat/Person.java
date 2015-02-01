@@ -167,9 +167,11 @@ public class Person {
         }
 
         // Update each category
-        for (Category cat : Category.values()) {
-            if (cat.index != null) {
-                specialCounts[cat.index] += countTagInstances(lowerCaseText, cat.tags);
+        if (!meSentToThem) {
+            for (Category cat : Category.values()) {
+                if (cat.index != null) {
+                    specialCounts[cat.index] += countTagInstances(lowerCaseText, cat.tags);
+                }
             }
         }
 
