@@ -24,7 +24,7 @@ public class MessageListActivity extends ListActivity {
 
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
-    static Person fartbox;
+    static Person userPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class MessageListActivity extends ListActivity {
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        fartbox = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
+        userPerson = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -72,7 +72,7 @@ public class MessageListActivity extends ListActivity {
                 } else {
                     sms.setFolderName(SMSData.INBOX);
                 }
-                fartbox.update(sms);
+                userPerson.update(sms);
 
                 c.moveToNext();
             }
@@ -184,10 +184,10 @@ public class MessageListActivity extends ListActivity {
         return smsPeople;
     }
 
-    public static Person getMe(){
-        if (fartbox == null){
+    public static Person getUserPerson(){
+        if (userPerson == null){
             return null;
         }
-        return fartbox;
+        return userPerson;
     }
 }

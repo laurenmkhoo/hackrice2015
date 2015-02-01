@@ -45,7 +45,6 @@ public class FriendsActivity extends ListActivity {
 
     public void goToFriendProfile(View view) {
         Intent intent = new Intent(this, FriendProfile.class);
-        System.out.println("\n\n\n\n\n\n\n\n\n\nActivity: " + ((Button) view).getContentDescription());
         intent.putExtra(FriendProfile.PERSON, MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
         startActivity(intent);
     }

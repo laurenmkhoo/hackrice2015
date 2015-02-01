@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
             TextView tv = (TextView)(views.get(i));
             tv.setTypeface(tf);
         }
-
+        // More font manipulation
         ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.fun), "header");
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_INLINE.otf");
         for (int i = 0; i < viewsBold.size(); i++) {
@@ -44,23 +45,27 @@ public class MainActivity extends ActionBarActivity {
             tvBold.setTypeface(tfBold);
         }
 
+        // Read in tags
         loadFiles();
     }
 
-    /**
-     * Called when the Rankings button is clicked
-     * @param view
-     */
-    public void goToRankings(View view) {
-        startActivity(new Intent(this, Rankings.class));
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Turn off buttons when they won't work
+        ((Button) findViewById(R.id.main_btn_me)).setClickable(
+                MessageListActivity.getUserPerson() == null);
+        ((Button) findViewById(R.id.main_btn_friends)).setClickable(
+                MessageListActivity.getUserPerson() == null);
     }
 
     public void goToMyProfile(View view) {
-        if (MessageListActivity.getMe() == null){
+        if (MessageListActivity.getUserPerson() == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendProfile.class);
-            intent.putExtra(FriendProfile.PERSON, MessageListActivity.fartbox);
+            intent.putExtra(FriendProfile.PERSON, MessageListActivity.userPerson);
             startActivity(intent);
         }
     }
@@ -74,6 +79,7 @@ public class MainActivity extends ActionBarActivity {
         if (MessageListActivity.getSMSPeople() == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
+
             startActivity(new Intent(this, FriendsActivity.class));
         }
     }
