@@ -44,6 +44,9 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
         ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
+
+        // Set up back on Action Bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -69,9 +72,16 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
         switch (item.getItemId()) {
 
             // Go Home
-            case R.id.friend_profile_home:
+            case R.id.friend_profile_to_home:
                 intent = new Intent(this, MainActivity.class);
                 break;
+
+            // Go to Rankings
+            case R.id.friend_profile_to_rankings:
+                intent = new Intent(this, Rankings.class);
+                break;
+
+            // Somehow picked something else
             default:
                 return super.onOptionsItemSelected(item);
         }
