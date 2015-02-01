@@ -18,5 +18,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/spinner1" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RECALCULATE"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:onClick="goToMain"
+        android:elegantTextHeight="false" />
+
 
 </RelativeLayout>

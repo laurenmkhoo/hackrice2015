@@ -1,5 +1,6 @@
 package com.pbj.teststat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -93,7 +94,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
                 double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
-                return comparison > 0? 1 : -1;
+                return comparison > 0 ? 1 : -1;
             }
         });
 
@@ -125,6 +126,10 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         public String toString() {
             return p.getName() + "  " + value;
         }
+    }
+
+    public void goToMain(){
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 }
