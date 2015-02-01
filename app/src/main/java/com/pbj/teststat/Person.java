@@ -105,6 +105,12 @@ public class Person {
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalWords(RECEIVED_FROM_THEM)) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
+        }),
+        SLOW_TEXTER("The Snail", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return -1 * p.getAverageResponseTime();
+            }
         });
 
         public final String name;
