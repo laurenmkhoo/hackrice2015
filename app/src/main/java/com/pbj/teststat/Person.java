@@ -124,8 +124,18 @@ public class Person {
     }
 
 
-    public double getCountOf(Category category) {
-        return stats.get(category);
+    /**
+     *
+     * @param category a constant from AllCategories
+     * @return
+     */
+    public double getCountOf(int category) {
+        for (Category cat : AllCategories.values()) {
+            if (cat.getUniqueID() == category) {
+                return stats.get(cat);
+            }
+        }
+        throw new IllegalStateException("Should've used the right constant");
     }
 
     /**

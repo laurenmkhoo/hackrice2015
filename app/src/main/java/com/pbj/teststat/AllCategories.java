@@ -14,6 +14,12 @@ public class AllCategories {
     private static final String[] PARTY_TAGS = new String[] {};
 
 
+    /*
+     * GIVE EVERY CATEGORY A UNIQUE ID SO THAT PERSON CLASS CAN IDENTIFY THEM
+     */
+    public static final int PROFANITY = 0;
+    public static final int VANITY = 1;
+    public static final int PARTY = 2;
 
     private static final Category[] categories = new Category[] {
 
@@ -24,6 +30,7 @@ public class AllCategories {
                 public int analyzeText(String text) {
                     return countTagInstances(text, PROFANITY_TAGS);
                 }
+                public int getUniqueID() { return PROFANITY; }
             },
 
             /*
@@ -33,6 +40,7 @@ public class AllCategories {
                 public int analyzeText(String text) {
                     return countTagInstances(text, VANITY_TAGS);
                 }
+                public int getUniqueID() { return VANITY; }
             },
 
             /*
@@ -42,6 +50,7 @@ public class AllCategories {
                 public int analyzeText(String text) {
                     return countTagInstances(text, PARTY_TAGS);
                 }
+                public int getUniqueID() { return PARTY; }
             }
 
 
