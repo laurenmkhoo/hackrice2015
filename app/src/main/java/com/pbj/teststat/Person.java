@@ -3,6 +3,7 @@ package com.pbj.teststat;
 
 import android.provider.ContactsContract;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Person {
     private String name; // may be superfluous
     private ContactsContract.Contacts myContact;
     private Map<Category, Long> stats = new HashMap<Category, Long>();
-    { // enum method from Java 8, I'll try and get the retro compiler working
+    {
         for (Category cat : AllCategories.values()) {
             stats.put(cat, new Long(0));
         }
@@ -29,11 +30,13 @@ public class Person {
     private long[] countMessages = new long[] {0, 0};
     private long[] countWords = new long[] {0, 0};
     private long[] countChars = new long[] {0, 0};
+    private long[] countEmoji = new long[] {0, 0};
 
     // Stats for Response Time
-    private Long lastSentToThemTime = null;
     private boolean meSentLast = false;
-    private List<Long> responseTimes = new ArrayList<Long>();
+    private Long lastSentToThemTime = null;
+    private BigInteger totalResponseTime = BigInteger.ZERO;
+    private int numResponseInstances = 0;
 
 
     public String getName() {
@@ -55,9 +58,12 @@ public class Person {
             meSentLast = true;
         }
         // Else if I've sent them something before, add the time to the list
-        else if (lastSentToThemTime != null && meSentLast) {
-            responseTimes.add(Long.parseLong(textMessage.getTime()) - lastSentToThemTime);
+        else if (meSentLast) {
+            totalResponseTime.add(BigInteger.valueOf(
+                    (Long.parseLong(textMessage.getTime()) - lastSentToThemTime) / 1000
+            ));
             meSentLast = false;
+            numResponseInstances++;
         }
 
         // Update each category
@@ -150,6 +156,11 @@ public class Person {
      */
     public long getTotalChars(int sentToThem) {
         return countChars[sentToThem];
+    }
+
+
+    public double getAverageResponseTime() {
+        return totalResponseTime.divide(BigInteger.valueOf(numResponseInstances)).longValue();
     }
 
 
