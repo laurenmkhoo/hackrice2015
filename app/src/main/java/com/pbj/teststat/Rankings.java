@@ -1,6 +1,10 @@
 package com.pbj.teststat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.app.Activity;
@@ -16,22 +20,33 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class Rankings extends Activity implements OnItemSelectedListener {
+public class Rankings extends ActionBarActivity implements OnItemSelectedListener {
     public static final String PEOPLE_LIST = "PEOPLE_LIST";
 
     private static HashMap<String, String> descriptions = new HashMap<String, String>();
     static {
-        descriptions.put(Person.Category.MOST_PROFANE.name, "Definitely does not kiss their mother with their mouth.");
-        descriptions.put(Person.Category.MOST_VAIN.name, "I don't think these friends are aware that the Earth revolves around the sun and not them.");
-        descriptions.put(Person.Category.LONGEST_WORD.name, "These friends are trying to compensate for something with their large-word-knowing");
-        descriptions.put(Person.Category.PARTY_ANIMAL.name, "This friend is probably most likely to get insurance on their liver");
-        descriptions.put(Person.Category.THEY_TEXT_MORE.name, "You should probably text these people a bit more...");
-        descriptions.put(Person.Category.THEY_TEXT_LESS.name, "I wouldn't be surprised if these people had shrines dedicated to you.");
-        descriptions.put(Person.Category.LAUGHER.name, "They're not actually laughing out loud, just so you know.");
-        descriptions.put(Person.Category.KNOW_NOTHING.name, "If you were on a trivia show, don't bother calling these people");
-        descriptions.put(Person.Category.MISS_BASIC.name, "Don't get too close to these people, I hear basic-ness is contagious");
-        descriptions.put(Person.Category.LOTS_OF_TEXTS.name, "The killer of limited text customers world-wide");
-        descriptions.put(Person.Category.LONG_TEXTS.name, "They've probably spent an hour constructing each text");
+        descriptions.put(Person.Category.MOST_PROFANE.name,
+                "Definitely does not kiss their mother with their mouth.");
+        descriptions.put(Person.Category.MOST_VAIN.name,
+                "I don't think these friends are aware that the Earth revolves around the sun and not them.");
+        descriptions.put(Person.Category.LONGEST_WORD.name,
+                "These friends are trying to compensate for something with their large-word-knowing");
+        descriptions.put(Person.Category.PARTY_ANIMAL.name,
+                "This friend is probably most likely to get insurance on their liver");
+        descriptions.put(Person.Category.THEY_TEXT_MORE.name,
+                "You should probably text these people a bit more...");
+        descriptions.put(Person.Category.THEY_TEXT_LESS.name,
+                "I wouldn't be surprised if these people had shrines dedicated to you.");
+        descriptions.put(Person.Category.LAUGHER.name,
+                "They're not actually laughing out loud, just so you know.");
+        descriptions.put(Person.Category.KNOW_NOTHING.name,
+                "If you were on a trivia show, don't bother calling these people");
+        descriptions.put(Person.Category.MISS_BASIC.name,
+                "Don't get too close to these people, I hear basic-ness is contagious");
+        descriptions.put(Person.Category.LOTS_OF_TEXTS.name,
+                "The killer of limited text customers world-wide");
+        descriptions.put(Person.Category.LONG_TEXTS.name,
+                "They've probably spent an hour constructing each text");
     }
 
     private static final String[] categories = new String[Person.Category.values().length];
@@ -44,6 +59,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
 
     Spinner spinner1;
 
+    private ArrayList<Person> peopleList;
     private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
     private ArrayAdapter<PersonWithRank> listAdapter;
 
@@ -53,8 +69,9 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_rankings);
 
         // Get friends from intent, arbitrary ranking at first
+        peopleList = (ArrayList<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        for (Person p : (List<Person>) getIntent().getExtras().get(PEOPLE_LIST)) {
+        for (Person p : peopleList) {
             friends.add(new PersonWithRank(p, 0));
         }
 
@@ -76,6 +93,23 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.rankings_to_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(PEOPLE_LIST, peopleList);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // Display Description
         Toast.makeText(getApplicationContext(), descriptions.get(
@@ -93,7 +127,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
                 double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
-                return comparison > 0? 1 : -1;
+                return comparison > 0 ? 1 : -1;
             }
         });
 

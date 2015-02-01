@@ -264,9 +264,9 @@ public class Person implements Serializable {
      * @return the total number of text messages
      */
     public long getTotalMessages(int sentToThem) {
-        if (countMessages[sentToThem] == 0) {
-            throw new IllegalStateException("Don't know how to handle this.");
-        }
+//        if (countMessages[sentToThem] == 0) {
+//            throw new IllegalStateException("Don't know how to handle this.");
+//        }
         return countMessages[sentToThem];
     }
 
