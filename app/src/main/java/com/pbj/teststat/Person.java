@@ -107,7 +107,7 @@ public class Person implements Serializable {
         SLOW_TEXTER("The Snail", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return -1 * p.getAverageResponseTime();
+                return -1.0 * p.getAverageResponseTime();
             }
         });
 
