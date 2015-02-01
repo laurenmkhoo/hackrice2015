@@ -4,9 +4,7 @@ package com.pbj.teststat;
 import android.provider.ContactsContract;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +48,7 @@ public class Person {
     public void update(SMSData textMessage) {
         assert (textMessage != null);
         boolean meSentToThem = textMessage.getFolderName() == SMSData.OUTBOX;
+        String lowerCaseText = textMessage.getBody().toLowerCase();
 
         // Response Time
         // If from me to them, then update my (not their) last sent time
@@ -68,17 +67,17 @@ public class Person {
 
         // Update each category
         for (Category cat : stats.keySet()) {
-            stats.put(cat, stats.get(cat) + cat.analyzeText(textMessage.getBody()));
+            stats.put(cat, stats.get(cat) + cat.analyzeText(lowerCaseText));
         }
 
         // Update all counts
-        countMessagesAndWordsAndChars(textMessage.getBody(),
-                meSentToThem? SENT_TO_THEM : RECEIVED_FROM_THEM);
+        countMessagesAndWordsAndChars(lowerCaseText, meSentToThem? SENT_TO_THEM : RECEIVED_FROM_THEM);
     }
 
 
     /**
      * ONLY counts alphabetical characters into totalChars
+     * TEXT MUST BE IN LOWER CASE!!
      * @param text
     */
     public void countMessagesAndWordsAndChars(final String text, final int sentToThem) {
@@ -87,8 +86,7 @@ public class Person {
 
         // Clear starting whitespace
         int i = 0;
-        while (!('a' <= (c = text.charAt(i++))
-                && c <= 'z' || 'A' <= c && c <= 'Z'));
+        while ('a' > (c = text.charAt(i++)) || c > 'z');
 
         // Loop through the rest of the text
         boolean wasChar = false;
@@ -105,8 +103,7 @@ public class Person {
             }
 
             // Alphabetical Character
-            else if (('a' <= c && c <= 'z')
-                    || ('A' <= c && c <= 'Z')) {
+            else if ('a' <= c && c <= 'z') {
                 countChars[sentToThem]++;
                 wasChar = true;
             }
@@ -127,8 +124,18 @@ public class Person {
     }
 
 
-    public double getCountOf(Category category) {
-        return stats.get(category);
+    /**
+     *
+     * @param category a constant from AllCategories
+     * @return
+     */
+    public double getCountOf(int category) {
+        for (Category cat : AllCategories.values()) {
+            if (cat.getUniqueID() == category) {
+                return stats.get(cat);
+            }
+        }
+        throw new IllegalStateException("Should've used the right constant");
     }
 
     /**

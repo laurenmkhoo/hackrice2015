@@ -10,35 +10,70 @@ public class AllCategories {
             "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
             "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore"};
 
+    private static final String[] VANITY_TAGS = new String[] {"i", "me", "my", "moi"};
+    private static final String[] PARTY_TAGS = new String[] {};
+
+
+    /*
+     * GIVE EVERY CATEGORY A UNIQUE ID SO THAT PERSON CLASS CAN IDENTIFY THEM
+     */
+    public static final int PROFANITY = 0;
+    public static final int VANITY = 1;
+    public static final int PARTY = 2;
 
     private static final Category[] categories = new Category[] {
 
-        /*
-         * PROFANITY DETECTION
-         */
-        new Category() {
-            public int analyzeText(String text) {
-                text = text.toLowerCase();
-                int count = 0;
-                for (int i = 0; i < text.length(); i++) {
-                    for (String profanity : PROFANITY_TAGS) {
-                        if (text.startsWith(profanity, i)) {
-                            count++;
-                        }
-                    }
+            /*
+             * PROFANITY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, PROFANITY_TAGS);
                 }
-                return count;
-            }
-        },
+                public int getUniqueID() { return PROFANITY; }
+            },
 
-        // SOMETHING ELSE
-        new Category() {
-            public int analyzeText(String text) {
-                // WHATEVER NEEDS TO BE DONE
-                return 0;
+            /*
+             * VANITY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, VANITY_TAGS);
+                }
+                public int getUniqueID() { return VANITY; }
+            },
+
+            /*
+             * PARTY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, PARTY_TAGS);
+                }
+                public int getUniqueID() { return PARTY; }
+            }
+
+
+
+    };
+
+    /**
+     * TEXT BETTER BE IN LOWER CASE BY NOW!
+     * @param text
+     * @param tags
+     * @return
+     */
+    private static final int countTagInstances(String text, final String[] tags) {
+        int count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            for (String tag : tags) {
+                if (text.startsWith(tag, i)) {
+                    count++;
+                }
             }
         }
-    };
+        return count;
+    }
 
 
     /**
