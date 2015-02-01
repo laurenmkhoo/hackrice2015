@@ -3,13 +3,10 @@ package com.pbj.teststat;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class MessageListActivity extends ListActivity {
 
@@ -81,14 +77,12 @@ public class MessageListActivity extends ListActivity {
                 c.moveToNext();
             }
         }
-//        System.out.println(smsPeople.keySet());
         c.close();
 
         ArrayList<Person> peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
             peopleList.add(smsPeople.get(s));
         }
-        MainActivity.PEOPLE_LIST = peopleList;
 
 
         // Set smsList in the ListAdapter

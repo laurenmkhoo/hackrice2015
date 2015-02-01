@@ -5,23 +5,14 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-import android.app.ListActivity;
-import android.database.Cursor;
-import android.net.Uri;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +23,6 @@ import android.widget.Toast;
  */
 
 public class MainActivity extends ActionBarActivity {
-    public static ArrayList<Person> PEOPLE_LIST = new ArrayList<Person>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
