@@ -1,6 +1,5 @@
 package com.pbj.teststat;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +10,6 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.view.View;
-import android.content.Intent;
 import android.widget.TextView;
 
 
@@ -25,12 +23,7 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
 
         // Get the person for this friend profile
         Person p = (Person) getIntent().getExtras().get(PERSON);
-        System.out.println(p);
-        ((TextView) findViewById(R.id.headerName))
-                .setText(p.getName());
-
-
-        final ListView listview = (ListView) findViewById(R.id.listview);
+        ((TextView) findViewById(R.id.headerName)).setText(p.getName());
 
 
         ListData[] values = new ListData[Person.Category.values().length];
@@ -41,7 +34,7 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
 
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-        listview.setAdapter(adapter);
+        ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
     }
 
 

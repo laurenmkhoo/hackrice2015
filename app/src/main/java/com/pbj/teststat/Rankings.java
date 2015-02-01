@@ -1,6 +1,5 @@
 package com.pbj.teststat;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -40,14 +38,14 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     static {
         int i = 0;
         for (Person.Category c : Person.Category.values()) {
-            categories[i] = c.name;
+            categories[i++] = c.name;
         }
     }
 
-    String selectedCategory;
     Spinner spinner1;
 
     private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
+    private ArrayAdapter<PersonWithRank> listAdapter;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -55,26 +53,26 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_rankings);
 
         // Get friends from intent, arbitrary ranking at first
-//        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        for (Person p : MainActivity.PEOPLE_LIST) {
-            PersonWithRank tempPerson = new PersonWithRank(p, i++);
-            System.out.println("TEMP_PERSON: " + tempPerson);
-            friends.add(tempPerson);
+        for (Person p : (List<Person>) getIntent().getExtras().get(PEOPLE_LIST)) {
+            friends.add(new PersonWithRank(p, 0));
         }
 
         // Make a spinner and other stuff
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
-        spinner1.setAdapter(adapter_state);
+        spinner1.setAdapter(spinnerAdapter);
         spinner1.setOnItemSelectedListener(this);
 
         final ListView listview = (ListView) findViewById(R.id.listview);
 
         // Make and set Adapter
-        ArrayAdapter<PersonWithRank> adapter = new ArrayAdapter<PersonWithRank>(this,
-                android.R.layout.simple_list_item_1, friends);
-        listview.setAdapter(adapter);
+        listAdapter = new ArrayAdapter<PersonWithRank>(this, android.R.layout.simple_list_item_1, friends);
+        listview.setAdapter(listAdapter);
+
+        // Arbitrarily Pick a Starting Category
+        sortList(Person.Category.LONG_TEXTS.name);
     }
 
     @Override
@@ -83,21 +81,25 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         Toast.makeText(getApplicationContext(), descriptions.get(
                 parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
 
-        // Select Category
-        selectedCategory = parent.getItemAtPosition(position).toString();
+        // Select Category and Sort List
+        sortList(parent.getItemAtPosition(position).toString());
+    }
 
+
+    private void sortList(final String selectedCategory) {
         // Sort friends
-        Collections.sort(friends, new Comparator<PersonWithRank>() {
+        listAdapter.sort(new Comparator<PersonWithRank>() {
 
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
-                return (int) (rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory));
+                double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
+                return comparison > 0? 1 : -1;
             }
         });
 
         // Update friends' ranks for appearance
-        for (int i = 0; i < friends.size(); i++) {
-            friends.get(i).rank = i;
+        for (PersonWithRank p : friends) {
+            p.value = p.p.getRatingFor(selectedCategory);
         }
     }
 
@@ -112,16 +114,16 @@ public class Rankings extends Activity implements OnItemSelectedListener {
      */
     private class PersonWithRank {
         public final Person p;
-        public int rank;
+        public double value;
 
-        public PersonWithRank(Person p, int rank) {
+        public PersonWithRank(Person p, double value) {
             this.p = p;
-            this.rank = rank;
+            this.value = value;
         }
 
 
         public String toString() {
-            return p.getName() + "  " + rank;
+            return p.getName() + "  " + value;
         }
     }
 

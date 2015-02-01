@@ -3,13 +3,10 @@ package com.pbj.teststat;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,13 +19,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class MessageListActivity extends ListActivity {
 
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
-    static Person fartbox;
+    static Person userPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +33,7 @@ public class MessageListActivity extends ListActivity {
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        fartbox = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
+        userPerson = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -76,26 +72,26 @@ public class MessageListActivity extends ListActivity {
                 } else {
                     sms.setFolderName(SMSData.INBOX);
                 }
-                fartbox.update(sms);
+                userPerson.update(sms);
 
                 c.moveToNext();
             }
         }
-        System.out.println(smsPeople.keySet());
         c.close();
 
         ArrayList<Person> peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
             peopleList.add(smsPeople.get(s));
         }
-        MainActivity.PEOPLE_LIST = peopleList;
 
 
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
         // Migrate to Rankings
-        startActivity(new Intent(this, Rankings.class));
+        Intent intent = new Intent(this, Rankings.class);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
     }
 
     @Override
@@ -188,10 +184,10 @@ public class MessageListActivity extends ListActivity {
         return smsPeople;
     }
 
-    public static Person getMe(){
-        if (fartbox == null){
+    public static Person getUserPerson(){
+        if (userPerson == null){
             return null;
         }
-        return fartbox;
+        return userPerson;
     }
 }
