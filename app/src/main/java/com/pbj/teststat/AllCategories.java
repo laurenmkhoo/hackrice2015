@@ -7,13 +7,19 @@ public class AllCategories {
 
     private static final String[] PROFANITY_TAGS = new String[] {};
 
-    private static Category[] categories = new Category[] {
+    /*
+     * !!---OVERRIDE TO_STRING---!!
+     */
+    private static final Category[] categories = new Category[] {
 
         /*
          * PROFANITY DETECTION
          */
         new Category() {
+            public String toString() { return "Most Profane"; }
+
             public int analyzeText(String text) {
+                text = text.toLowerCase();
                 int count = 0;
                 for (int i = 0; i < text.length(); i++) {
                     for (String profanity : PROFANITY_TAGS) {
@@ -28,6 +34,8 @@ public class AllCategories {
 
         // SOMETHING ELSE
         new Category() {
+            public String toString() { return "Whatever this category is"; }
+
             public int analyzeText(String text) {
                 // WHATEVER NEEDS TO BE DONE
                 return 0;
@@ -36,6 +44,10 @@ public class AllCategories {
     };
 
 
+    /**
+     * Connects this class to the Person class and ensures that all Cateogries will always be used
+     * @return
+     */
     public static Category[] values() {
         return categories;
     }
