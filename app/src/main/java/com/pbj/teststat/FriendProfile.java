@@ -25,12 +25,7 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
 
         // Get the person for this friend profile
         Person p = (Person) getIntent().getExtras().get(PERSON);
-        System.out.println(p);
-        ((TextView) findViewById(R.id.headerName))
-                .setText(p.getName());
-
-
-        final ListView listview = (ListView) findViewById(R.id.listview);
+        ((TextView) findViewById(R.id.headerName)).setText(p.getName());
 
 
         ListData[] values = new ListData[Person.Category.values().length];
@@ -41,7 +36,7 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
 
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-        listview.setAdapter(adapter);
+        ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
     }
 
 

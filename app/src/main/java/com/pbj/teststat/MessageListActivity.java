@@ -81,7 +81,7 @@ public class MessageListActivity extends ListActivity {
                 c.moveToNext();
             }
         }
-        System.out.println(smsPeople.keySet());
+//        System.out.println(smsPeople.keySet());
         c.close();
 
         ArrayList<Person> peopleList = new ArrayList<Person>();
@@ -95,7 +95,9 @@ public class MessageListActivity extends ListActivity {
         setListAdapter(new ListAdapter(this, smsList));
 
         // Migrate to Rankings
-        startActivity(new Intent(this, Rankings.class));
+        Intent intent = new Intent(this, Rankings.class);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
     }
 
     @Override
