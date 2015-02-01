@@ -2,6 +2,8 @@ package com.pbj.teststat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,6 +91,9 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
         // Arbitrarily Pick a Starting Category
         sortList(Person.Category.LONG_TEXTS.name);
+
+        // Set up back on Action Bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -121,6 +126,26 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
             case R.id.rankings_to_friends:
                 intent = new Intent(this, FriendsActivity.class);
                 break;
+
+            // Back Button
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+                if (NavUtils.shouldUpRecreateTask(this, intent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(intent)
+                                    // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, intent);
+                }
+                return true;
+
 
             // Somehow nothing picked
             default:
