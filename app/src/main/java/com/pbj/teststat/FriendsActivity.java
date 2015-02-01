@@ -8,17 +8,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
 
 
 public class FriendsActivity extends ListActivity {
+    private ArrayList<String> peopleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_friends);
         setListAdapter(new FriendAdapter(this, MessageListActivity.getSMSPeople()));
-    }
 
+        // Save people list for future
+        peopleList = (ArrayList<String>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,7 +48,9 @@ public class FriendsActivity extends ListActivity {
 
     public void goToFriendProfile(View view) {
         Intent intent = new Intent(this, FriendProfile.class);
-        intent.putExtra(FriendProfile.PERSON, MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        intent.putExtra(FriendProfile.PERSON,
+                MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
         startActivity(intent);
     }
 

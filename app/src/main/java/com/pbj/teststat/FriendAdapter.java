@@ -35,14 +35,12 @@ public class FriendAdapter extends ArrayAdapter<String> {
 
         View rowView = inflater.inflate(R.layout.activity_friends, parent, false);
         Button senderPerson = (Button) rowView.findViewById(R.id.friendPerson);
-        String display = personMap.get(numberList.get(position)).getName();
-//        System.out.println("LOOK HERE ->" + display + "<- LOOK HERE");
-        if (display == "" || display == null){
-            display = personMap.get(numberList.get(position)).getNumber();
-        }
 
-        senderPerson.setText(display);
-        senderPerson.setContentDescription(personMap.get(numberList.get(position)).getID());
+
+        Person p = personMap.get(numberList.get(position));
+        senderPerson.setText((p.getName() == null || p.getName().equals("")?
+                p.getNumber() : p.getName()));
+        senderPerson.setContentDescription(p.getID());
 
         return rowView;
     }

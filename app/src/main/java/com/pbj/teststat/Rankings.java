@@ -93,6 +93,15 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (peopleList == null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         getMenuInflater().inflate(R.menu.menu_rankings, menu);
@@ -107,13 +116,11 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
            // Go Home
             case R.id.rankings_to_home:
                 intent = new Intent(this, MainActivity.class);
-                intent.putExtra(PEOPLE_LIST, peopleList);
                 break;
 
             // Go to Friends list
             case R.id.rankings_to_friends:
                 intent = new Intent(this, FriendsActivity.class);
-                intent.putExtra(PEOPLE_LIST, peopleList);
                 break;
 
             // Somehow nothing picked
@@ -122,7 +129,9 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
         }
 
         // Go where we decided to go
+        intent.putExtra(PEOPLE_LIST, peopleList);
         startActivity(intent);
+
         return super.onOptionsItemSelected(item);
     }
 
