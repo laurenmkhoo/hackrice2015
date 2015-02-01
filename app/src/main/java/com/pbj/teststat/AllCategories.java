@@ -10,17 +10,13 @@ public class AllCategories {
             "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
             "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore"};
 
-    /*
-     * !!---OVERRIDE TO_STRING---!!
-     */
+
     private static final Category[] categories = new Category[] {
 
         /*
          * PROFANITY DETECTION
          */
         new Category() {
-            public String toString() { return "Most Profane"; }
-
             public int analyzeText(String text) {
                 text = text.toLowerCase();
                 int count = 0;
@@ -37,8 +33,6 @@ public class AllCategories {
 
         // SOMETHING ELSE
         new Category() {
-            public String toString() { return "Whatever this category is"; }
-
             public int analyzeText(String text) {
                 // WHATEVER NEEDS TO BE DONE
                 return 0;
