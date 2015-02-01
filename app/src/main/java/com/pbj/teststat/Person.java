@@ -1,12 +1,12 @@
 package com.pbj.teststat;
 
-
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.io.Serializable;
+
+
 
 /**
  * Created by Hellemn on 1/31/2015.
@@ -310,4 +310,31 @@ public class Person implements Serializable {
         }
         return count;
     }
+
+    public String getStringRepresentation() {
+        String s = "";
+        s += ID + ";" + personName + ";" + myContact + ";";
+        for (int i = 0; i < 6; i++) {
+            s += specialCounts[i] + ";";
+        }
+        s += countMessages[0] +";" + countMessages[1] + ";";
+        s += countWords[0] +";" + countWords[1] + ";";
+        s += countChars[0] +";" + countChars[1];
+
+        return s;
+    }
+
+    public void setSpecialCounts(long a, long b, long c, long d, long e, long f) {
+        specialCounts = new long[] {a, b, c, d, e, f};
+    }
+    public void setCountMessages(long a, long b) {
+        countMessages = new long[] {a, b};
+    }
+    public void setCountWords(long a, long b) {
+        countWords = new long[] {a, b};
+    }
+    public void setCountChars(long a, long b) {
+        countChars = new long[] {a, b};
+    }
+
 }
