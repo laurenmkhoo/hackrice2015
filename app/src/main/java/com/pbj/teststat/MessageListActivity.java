@@ -84,7 +84,9 @@ public class MessageListActivity extends ListActivity {
 
         MainActivity.peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
-            MainActivity.peopleList.add(smsPeople.get(s));
+            if (smsPeople.get(s).getTotalMessages(Person.RECEIVED_FROM_THEM) > 10) {
+                MainActivity.peopleList.add(smsPeople.get(s));
+            }
         }
 
         // Set smsList in the ListAdapter
