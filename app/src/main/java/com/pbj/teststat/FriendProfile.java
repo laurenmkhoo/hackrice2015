@@ -1,6 +1,7 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -137,5 +138,25 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
         public String toString() {
             return this.categoryName + " " + "[" +  this.value + "]";
         }
+    }
+
+
+    @Override
+    public void onPause() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onPause();
+        String allPeople = "";
+        for (Person p: MainActivity.peopleList) {
+            allPeople += p.getStringRepresentation() + ",";
+        }
+
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("allPeople", allPeople);
+
+        // Commit the edits!
+        editor.commit();
     }
 }

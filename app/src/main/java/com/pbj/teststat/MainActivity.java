@@ -61,13 +61,37 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MessageListActivity.getUserPerson() == null) {
-            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
-        }
         // Check if redirected
         if (getIntent() != null && getIntent().getExtras() != null &&
                 getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
             peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+        }
+
+        else {
+            peopleList = new ArrayList<Person>();
+
+            SharedPreferences settings = getSharedPreferences("preferences", 0);
+            String smooshedPeople = settings.getString("allPeople", "");
+            if (!smooshedPeople.equals("")) {
+                String [] people = smooshedPeople.split(",");
+
+                for (int i = 0; i < people.length; i++) {
+                    String temp = people[i];
+                    String [] x = temp.split(";");
+
+                    Person p = new Person(x[2], x[1], x[0]);
+                    p.setSpecialCounts(Long.parseLong(x[3]), Long.parseLong(x[4]), Long.parseLong(x[5]), Long.parseLong(x[6]), Long.parseLong(x[7]), Long.parseLong(x[8]));
+                    p.setCountMessages(Long.parseLong(x[9]), Long.parseLong(x[10]));
+                    p.setCountWords(Long.parseLong(x[11]), Long.parseLong(x[12]));
+                    p.setCountChars(Long.parseLong(x[13]), Long.parseLong(x[14]));
+
+                    peopleList.add(p);
+                }
+            }
+        }
+
+        if (MessageListActivity.getUserPerson() == null && peopleList.size() < 1) {
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -182,41 +206,8 @@ public class MainActivity extends ActionBarActivity {
 
         // Commit the edits!
         editor.commit();
-
-        System.out.println("DESTROYED");
-        System.out.println("ALLPEOPLE: " + allPeople);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        System.out.println("START");
-        peopleList = new ArrayList<Person>();
-
-        SharedPreferences settings = getSharedPreferences("preferences", 0);
-        String smooshedPeople = settings.getString("allPeople", "");
-        if (!smooshedPeople.equals("")) {
-            System.out.println("ON START");
-            String [] people = smooshedPeople.split(",");
-
-            for (int i = 0; i < people.length; i++) {
-                String temp = people[i];
-                String [] x = temp.split(";");
-                System.out.println("X: " + Arrays.toString(x));
-
-                Person p = new Person(x[2], x[1], x[0]);
-                p.setSpecialCounts(Long.parseLong(x[3]), Long.parseLong(x[4]), Long.parseLong(x[5]), Long.parseLong(x[6]), Long.parseLong(x[7]), Long.parseLong(x[8]));
-                p.setCountMessages(Long.parseLong(x[9]), Long.parseLong(x[10]));
-                p.setCountWords(Long.parseLong(x[11]), Long.parseLong(x[12]));
-                p.setCountChars(Long.parseLong(x[13]), Long.parseLong(x[14]));
-
-                peopleList.add(p);
-            }
-
-            System.out.println("PEOPLE_LIST AFTER START: " + peopleList);
-        }
-
-    }
 
 
 }
