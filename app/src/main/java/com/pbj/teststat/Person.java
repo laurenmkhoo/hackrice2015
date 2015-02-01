@@ -1,11 +1,12 @@
 package com.pbj.teststat;
 
 
-import java.io.Serializable;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by Hellemn on 1/31/2015.
@@ -128,9 +129,9 @@ public class Person implements Serializable {
     }
 
 
-    // Personal Statistics
-    private String personName;
-    private String phoneNumber;
+    private String ID;
+    private String personName; 
+    private String myContact;
     private long[] specialCounts = new long[6];
 
     // Counts of stuff
@@ -158,15 +159,18 @@ public class Person implements Serializable {
     private int triggerRank;
     private int novelRank;
 
-     public Person(String number, String inputName){
-        phoneNumber = number;
+     public Person(String number, String inputName, String ID){
+        myContact = number;
         personName = inputName;
+         this.ID = ID;
     }
 
     public String getName() {
         return personName;
     }
-    public String getNumber(){ return phoneNumber;}
+    public String getNumber(){ return myContact;}
+    public String getID() { return ID; }
+
     /**
      * Updates all my parameters.
      * @param textMessage the text message

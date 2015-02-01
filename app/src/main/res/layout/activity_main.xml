@@ -28,7 +28,7 @@
         android:tag="button"
         style="@style/button"
         android:clickable="true"
-        android:onClick="goToRankings"/>
+        android:onClick="goToFriends"/>
 
     <Button android:text="analyze"
         android:background="#ae658e"

@@ -1,10 +1,13 @@
 package com.pbj.teststat;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class FriendsActivity extends ListActivity {
@@ -40,4 +43,12 @@ public class FriendsActivity extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void goToFriendProfile(View view) {
+        Intent intent = new Intent(this, FriendProfile.class);
+        System.out.println("\n\n\n\n\n\n\n\n\n\nActivity: " + ((Button) view).getContentDescription());
+        intent.putExtra(FriendProfile.PERSON, MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        startActivity(intent);
+    }
+
 }

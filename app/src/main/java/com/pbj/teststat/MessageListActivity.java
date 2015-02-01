@@ -62,7 +62,7 @@ public class MessageListActivity extends ListActivity {
 
                 smsList.add(sms);
                 if (!smsPeople.containsKey(contactID)) {
-                    Person newPerson = new Person(contactNumber, contactName);
+                    Person newPerson = new Person(contactNumber, contactName, contactID);
                     smsPeople.put(contactID, newPerson);
                 }
                 smsPeople.get(contactID).update(sms);

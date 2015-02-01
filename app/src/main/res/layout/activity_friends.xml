@@ -12,6 +12,8 @@
         android:id="@+id/friendPerson"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="40dp"
+        android:onClick="goToFriendProfile"
+        android:contentDescription="Filled in by Java"/>
 
 </RelativeLayout>

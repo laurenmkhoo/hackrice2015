@@ -38,6 +38,7 @@ public class FriendAdapter extends ArrayAdapter<String> {
         Button senderPerson = (Button) rowView.findViewById(R.id.friendPerson);
 
         senderPerson.setText(personMap.get(numberList.get(position)).getName());
+        senderPerson.setContentDescription(personMap.get(numberList.get(position)).getID());
 
         return rowView;
     }
