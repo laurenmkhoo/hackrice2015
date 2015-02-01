@@ -54,7 +54,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+        if (MessageListActivity.getUserPerson() == null) {
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        }
         // Turn off buttons when they won't work
         ((Button) findViewById(R.id.main_btn_me)).setClickable(
                 MessageListActivity.getUserPerson() == null);
