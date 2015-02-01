@@ -4,6 +4,7 @@ package com.pbj.teststat;
  * Created by cwang on 2/1/2015.
  */
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,17 +18,15 @@ public class SerializationUtil {
     private ObjectInputStream objectInput;
     private ObjectOutputStream objectOutput;
 
-    public SerializationUtil(String inputFileName, String outputFileName) {
-        inputFileName = inputFileName;
-        outputFileName = outputFileName;
+    public SerializationUtil() {
+    }
 
+
+    // serialize the given object and save it to file
+    public void startDeserialize(String inputFileName) {
         try {
             fileInput = new FileInputStream(inputFileName);
-            fileOutput = new FileOutputStream(outputFileName);
-
             objectInput = new ObjectInputStream(fileInput);
-            objectOutput = new ObjectOutputStream(fileOutput);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,11 +37,7 @@ public class SerializationUtil {
         return obj;
     }
 
-    // serialize the given object and save it to file
-    public void serialize(Object obj) throws IOException {
-        objectOutput.writeObject(obj);
-    }
-    public void inputFinish() {
+    public void deserializeFinish() {
         try {
             objectInput.close();
         } catch (IOException e) {
@@ -50,7 +45,20 @@ public class SerializationUtil {
         }
     }
 
-    public void outputFinish() {
+    // serialize the given object and save it to file
+    public void startSerialize(String outputFileName) {
+        try {
+            fileOutput = new FileOutputStream(outputFileName);
+            objectOutput = new ObjectOutputStream(fileOutput);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void serialize(Object obj) throws IOException {
+        objectOutput.writeObject(obj);
+    }
+
+    public void serializeFinish() {
         try {
             fileOutput.close();
         } catch (IOException e) {

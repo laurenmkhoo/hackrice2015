@@ -1,6 +1,7 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.Toast;
  */
 
 public class MainActivity extends ActionBarActivity {
+    private static final String PREFS_NAME = "preferences";
     public static ArrayList<Person> PEOPLE_LIST = new ArrayList<Person>();
 
     @Override
@@ -40,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
             tv.setTypeface(tf);
         }
         // More font manipulation
-        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.fun), "header");
+        ArrayList <View> viewsBold = getViewsByTag((ViewGroup) findViewById(R.id.fun), "header");
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_INLINE.otf");
         for (int i = 0; i < viewsBold.size(); i++) {
             TextView tvBold = (TextView)(viewsBold.get(i));
@@ -135,12 +137,15 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
         // Save UI state changes to the savedInstanceState.
         // This bundle will be passed to onCreate if the process is
         // killed and restarted.
-        SerializationUtil serial = new SerializationUtil("savedInstance.txt", "savedInstance.txt");
+        super.onDestroy();
+
+        SerializationUtil serial = new SerializationUtil();
         //serialize to file
+        serial.startSerialize("saved_instance.txt");
         for (Person p: MainActivity.PEOPLE_LIST) {
             try {
                 serial.serialize(p);
@@ -150,23 +155,38 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
-        serial.outputFinish();
+        serial.serializeFinish();
 
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("loadedBefore", true);
+
+        // Commit the edits!
+        editor.commit();
     }
 
     @Override
     public void onStart() {
-        SerializationUtil serial = new SerializationUtil("savedInstance.txt", "savedInstance.txt");
-        MainActivity.PEOPLE_LIST = new ArrayList<Person>();
+        super.onStart();
 
-        try {
-            while (true) {
-                MainActivity.PEOPLE_LIST.add((Person)serial.deserialize());
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean loadedBefore = settings.getBoolean("loadedBefore", false);
+
+        if (loadedBefore) {
+            SerializationUtil serial = new SerializationUtil();
+            serial.startDeserialize("saved_instance.txt");
+
+            MainActivity.PEOPLE_LIST = new ArrayList<Person>();
+
+            try {
+                while (true) {
+                    MainActivity.PEOPLE_LIST.add((Person)serial.deserialize());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                serial.deserializeFinish();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            serial.inputFinish();
         }
     }
 
