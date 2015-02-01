@@ -69,6 +69,8 @@ public class MainActivity extends ActionBarActivity {
         if (MessageListActivity.getMe() == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
+            Intent intent = new Intent(this, FriendProfile.class);
+            intent.putExtra(FriendProfile.PERSON, MessageListActivity.fartbox);
             startActivity(new Intent(this, FriendProfile.class));
         }
     }
