@@ -38,73 +38,73 @@ public class Person implements Serializable {
 
     // Maps Category Names to Formulas and Indices
     public static enum Category {
-        MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, new Formula() {
+        MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, "swears per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return (1.0*p.specialCounts[0]) / p.getTotalWords(RECEIVED_FROM_THEM);
+                return (1.0*p.specialCounts[0]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        MOST_VAIN(1, "Narcissus", VANITY_TAGS, new Formula() {
+        MOST_VAIN(1, "Narcissus", VANITY_TAGS, "vain phrases per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return (1.0*p.specialCounts[1]) / p.getTotalWords(RECEIVED_FROM_THEM);
+                return (1.0*p.specialCounts[1]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        LONGEST_WORD("Sesquipedalian", new Formula() {
+        LONGEST_WORD("Sesquipedalian", "letters per words", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalChars(RECEIVED_FROM_THEM)) / p.getTotalWords(RECEIVED_FROM_THEM);
             }
         }),
-        PARTY_ANIMAL(2, "Kaiser of Krunk", PARTY_TAGS, new Formula() {
+        PARTY_ANIMAL(2, "Kaiser of Krunk", PARTY_TAGS, "party words per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return (1.0*p.specialCounts[2]) / p.getTotalWords(RECEIVED_FROM_THEM);
+                return (1.0*p.specialCounts[2]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        THEY_TEXT_MORE("Stalker", new Formula() {
+        THEY_TEXT_MORE("Stalker", "their texts / your texts", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalMessages(RECEIVED_FROM_THEM)) / p.getTotalMessages(SENT_TO_THEM);
             }
         }),
-        THEY_TEXT_LESS("Unrequited Love", new Formula() {
+        THEY_TEXT_LESS("Unrequited Love", "your texts / their texts", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalMessages(SENT_TO_THEM)) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        LAUGHER(3, "The Laugher", LAUGH_TAGS, new Formula() {
+        LAUGHER(3, "The Laugher", LAUGH_TAGS, "laughs per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.specialCounts[3]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        KNOW_NOTHING(4, "The Know Nothing", KNOW_NOTHING_TAGS, new Formula() {
+        KNOW_NOTHING(4, "The Know Nothing", KNOW_NOTHING_TAGS, "not-answers per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return (1.0*p.specialCounts[4]) / p.getTotalWords(RECEIVED_FROM_THEM);
+                return (1.0*p.specialCounts[4]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        MISS_BASIC(5, "Miss Basic", BASIC_TAGS, new Formula() {
+        MISS_BASIC(5, "Miss Basic", BASIC_TAGS, "basic clues per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
-                return (1.0*p.specialCounts[5]) / p.getTotalWords(RECEIVED_FROM_THEM);
+                return (1.0*p.specialCounts[5]) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        LOTS_OF_TEXTS("Trigger Happy", new Formula() {
+        LOTS_OF_TEXTS("Trigger Happy", "texts per words", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalMessages(RECEIVED_FROM_THEM)) / p.getTotalWords(RECEIVED_FROM_THEM);
             }
         }),
-        LONG_TEXTS("The Novelist", new Formula() {
+        LONG_TEXTS("The Novelist", "words per text", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalWords(RECEIVED_FROM_THEM)) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
         }),
-        SLOW_TEXTER("The Snail", new Formula() {
+        SLOW_TEXTER("The Snail", "seconds to respond", new Formula() {
             @Override
             public double calculateFor(Person p) {
                 return -1.0 * p.getAverageResponseTime();
@@ -112,17 +112,19 @@ public class Person implements Serializable {
         });
 
         public final String name;
+        public final String description;
         public final Integer index;
         public final Formula formula;
         public final List<String> tags;
 
-        Category(String name, Formula formula) {
-            this(null, name, null, formula);
+        Category(String name, String description, Formula formula) {
+            this(null, name, null, description, formula);
         }
 
-        Category(Integer index, String name, List<String> tags, Formula formula) {
+        Category(Integer index, String name, List<String> tags, String description, Formula formula) {
             this.index = index;
             this.name = name;
+            this.description = description;
             this.tags = tags;
             this.formula = formula;
         }
