@@ -5,7 +5,7 @@ package com.pbj.teststat;
  */
 public class AllCategories {
 
-    private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner",
+    private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner", "fellatio",
             "camel toe", "chode", "clit", "cooch", "cock", "cum", "cunnilingus", "cunt", "damn", "dam", "dick", "douche",
             "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
             "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore"};

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TestStat</string>
+    <string name="app_name">Statextics</string>
 
     <!-- Main Activity Strings -->
-    <string name="main_activity_name">Welcome to the TextStat app!</string>
+    <string name="main_activity_name">Statextics</string>
     <string name="main_btn_see_current_stats">Current Text Stats</string>
     <string name="main_btn_analyze_texts">Analyze Texts</string>
     <string name="main_btn_messages">Messages</string>
