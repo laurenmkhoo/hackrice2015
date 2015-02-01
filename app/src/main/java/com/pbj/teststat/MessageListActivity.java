@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -29,6 +30,12 @@ public class MessageListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean firstTime = getIntent().getExtras().getBoolean("FIRST_TIME");
+
+        if (firstTime) {
+
+        }
 
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
@@ -79,18 +86,17 @@ public class MessageListActivity extends ListActivity {
         }
         c.close();
 
-        ArrayList<Person> peopleList = new ArrayList<Person>();
+        MainActivity.peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
-            peopleList.add(smsPeople.get(s));
+            MainActivity.peopleList.add(smsPeople.get(s));
         }
-
 
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
         // Migrate to Rankings
         Intent intent = new Intent(this, Rankings.class);
-        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        intent.putExtra(Rankings.PEOPLE_LIST, MainActivity.peopleList);
         startActivity(intent);
     }
 
@@ -178,7 +184,18 @@ public class MessageListActivity extends ListActivity {
     }
 
     public static HashMap<String, Person> getSMSPeople(){
+
         if (smsPeople == null){
+            if (MainActivity.peopleList.size() > 0) {
+                HashMap<String, Person> tempMap = new HashMap<String, Person>();
+
+                for (int i = 0; i < MainActivity.peopleList.size(); i++) {
+                    Person tempPerson = MainActivity.peopleList.get(i);
+                    tempMap.put(tempPerson.getID(), tempPerson);
+                }
+
+                return tempMap;
+            }
             return null;
         }
         return smsPeople;

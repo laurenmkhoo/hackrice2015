@@ -2,6 +2,7 @@ package com.pbj.teststat;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -127,6 +128,26 @@ public class FriendsActivity extends ListActivity {
                 MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
         intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onPause() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onPause();
+        String allPeople = "";
+        for (Person p: MainActivity.peopleList) {
+            allPeople += p.getStringRepresentation() + ",";
+        }
+
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("allPeople", allPeople);
+
+        // Commit the edits!
+        editor.commit();
     }
 
 }
