@@ -4,6 +4,8 @@ package com.pbj.teststat;
  * This class represents SMS.
  */
 public class SMSData {
+    public static final String INBOX = "inbox";
+    public static final String OUTBOX = "outbox";
 
     // Number from witch the sms was send
     private String number;

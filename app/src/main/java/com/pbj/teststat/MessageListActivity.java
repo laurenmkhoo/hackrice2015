@@ -43,9 +43,9 @@ public class MessageListActivity extends ListActivity {
                 sms.setTime(c.getString(c.getColumnIndexOrThrow("date")).toString());
 
                 if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
-                    sms.setFolderName("inbox");
+                    sms.setFolderName(SMSData.INBOX);
                 } else {
-                    sms.setFolderName("sent");
+                    sms.setFolderName(SMSData.OUTBOX);
                 }
 
 
