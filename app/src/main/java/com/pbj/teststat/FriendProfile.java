@@ -1,10 +1,13 @@
 package com.pbj.teststat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -12,17 +15,25 @@ import android.widget.AdapterView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 
-public class FriendProfile extends Activity implements OnItemSelectedListener {
+
+public class FriendProfile extends ActionBarActivity implements OnItemSelectedListener {
     public static final String PERSON = "PERSON";
+
+    private ArrayList<Person> peopleList;
+    private Person p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
 
+        // Save people list for future redirections
+        peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+
         // Get the person for this friend profile
-        Person p = (Person) getIntent().getExtras().get(PERSON);
+        p = (Person) getIntent().getExtras().get(PERSON);
         ((TextView) findViewById(R.id.headerName)).setText(p.getName());
 
 
@@ -35,6 +46,18 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
         ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
+
+        // Set up back on Action Bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (p == null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
 
@@ -42,20 +65,51 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_friend_profile, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Intent intent;
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            // Go Home
+            case R.id.friend_profile_to_home:
+                intent = new Intent(this, MainActivity.class);
+                break;
+
+            // Go to Rankings
+            case R.id.friend_profile_to_rankings:
+                intent = new Intent(this, Rankings.class);
+                break;
+
+            // Back Button
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+                if (NavUtils.shouldUpRecreateTask(this, intent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(intent)
+                                    // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, intent);
+                }
+                return true;
+
+            // Somehow picked something else
+            default:
+                return super.onOptionsItemSelected(item);
         }
+
+        // Always add people list
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }

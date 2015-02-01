@@ -68,10 +68,6 @@ public class MainActivity extends ActionBarActivity {
                 getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
             peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
         }
-
-        // Turn off buttons when they won't work
-        ((Button) findViewById(R.id.main_btn_me)).setClickable(peopleList == null);
-        ((Button) findViewById(R.id.main_btn_friends)).setClickable(peopleList == null);
     }
 
 
@@ -87,12 +83,12 @@ public class MainActivity extends ActionBarActivity {
      * @param view the view
      */
     public void goToMyProfile(View view) {
-        if (MessageListActivity.getUserPerson() == null){
-            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        if (peopleList == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE first.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendProfile.class);
             intent.putExtra(FriendProfile.PERSON, MessageListActivity.userPerson);
-            intent.putExtra(Rankings.PEOPLE_LIST, peopleList); // why not?
+            intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
             startActivity(intent);
         }
     }
@@ -113,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
      * @param view
      */
     public void goToFriends(View view){
-        if (MessageListActivity.getSMSPeople() == null){
+        if (peopleList == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendsActivity.class);

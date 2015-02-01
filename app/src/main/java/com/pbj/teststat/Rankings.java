@@ -2,12 +2,13 @@ package com.pbj.teststat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.app.Activity;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
@@ -90,22 +91,71 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
         // Arbitrarily Pick a Starting Category
         sortList(Person.Category.LONG_TEXTS.name);
+
+        // Set up back on Action Bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (peopleList == null) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_rankings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.rankings_to_home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(PEOPLE_LIST, peopleList);
-            startActivity(intent);
+        Intent intent;
+        switch (item.getItemId()) {
+
+           // Go Home
+            case R.id.rankings_to_home:
+                intent = new Intent(this, MainActivity.class);
+                break;
+
+            // Go to Friends list
+            case R.id.rankings_to_friends:
+                intent = new Intent(this, FriendsActivity.class);
+                break;
+
+            // Back Button
+            case android.R.id.home:
+                intent = NavUtils.getParentActivityIntent(this);
+                intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+                if (NavUtils.shouldUpRecreateTask(this, intent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(intent)
+                                    // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, intent);
+                }
+                return true;
+
+
+            // Somehow nothing picked
+            default:
+                return super.onOptionsItemSelected(item);
         }
+
+        // Go where we decided to go
+        intent.putExtra(PEOPLE_LIST, peopleList);
+        startActivity(intent);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -152,13 +202,24 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
         public PersonWithRank(Person p, double value) {
             this.p = p;
+
             this.value = value;
+
         }
 
 
         public String toString() {
-            return p.getName() + "  " + value;
+            String display = p.getName();
+            if (display == "" || display == null){
+                display = p.getNumber();
+            }
+
+            return display + "  " + Math.floor(value * 100)/100;
         }
+    }
+
+    public void goToMain(){
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 }

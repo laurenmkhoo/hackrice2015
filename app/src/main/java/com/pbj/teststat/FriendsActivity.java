@@ -2,7 +2,6 @@ package com.pbj.teststat;
 
 import android.app.ListActivity;
 import android.graphics.Typeface;
-import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,7 +15,8 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 
-public class FriendsActivity extends ListActivity  {
+public class FriendsActivity extends ListActivity {
+    private ArrayList<String> peopleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,9 @@ public class FriendsActivity extends ListActivity  {
         TextView tv = (TextView)findViewById(R.id.topheader);
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
         tv.setTypeface(tfBold);
+
+        // Save people list for future
+        peopleList = (ArrayList<String>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
     }
 
 
@@ -75,7 +78,9 @@ public class FriendsActivity extends ListActivity  {
     }
     public void goToFriendProfile(View view) {
         Intent intent = new Intent(this, FriendProfile.class);
-        intent.putExtra(FriendProfile.PERSON, MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        intent.putExtra(FriendProfile.PERSON,
+                MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
         startActivity(intent);
     }
 

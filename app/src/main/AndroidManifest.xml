@@ -16,11 +16,12 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_READ_PHONE_STATE" />
 
-    <android:uses-permission
+    <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
 
@@ -47,7 +48,11 @@
         <activity
             android:name=".Rankings"
             android:label="Rankings"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".FriendsActivity"
@@ -59,7 +64,11 @@
         <activity
             android:name=".FriendProfile"
             android:label="@string/title_activity_friend_profile"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".FriendsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FriendsActivity"/>
         </activity>
     </application>
 
