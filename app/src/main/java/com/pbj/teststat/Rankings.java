@@ -53,9 +53,14 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         super.onCreate(icicle);
         setContentView(R.layout.activity_rankings);
 
-        // Get friends from intent
-        friends = (List<PersonWithRank>) getIntent().getExtras().get(PEOPLE_LIST);
+        // Get friends from intent, arbitrary ranking at first
+        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
+        int i = 0;
+        for (Person p : personList) {
+            friends.add(new PersonWithRank(p, i++));
+        }
 
+        // Make a spinner and other stuff
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner1.setAdapter(adapter_state);
@@ -75,15 +80,22 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         Toast.makeText(getApplicationContext(), descriptions.get(
                 parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
 
-        // Select Category and Sort Rankings
+        // Select Category
         selectedCategory = parent.getItemAtPosition(position).toString();
+
+        // Sort friends
         Collections.sort(friends, new Comparator<PersonWithRank>() {
 
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
                 return (int) (rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory));
             }
-        })
+        });
+
+        // Update friends' ranks for appearance
+        for (int i = 0; i < friends.size(); i++) {
+            friends.get(i).rank = i;
+        }
     }
 
     @Override
@@ -92,10 +104,12 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     }
 
 
-
+    /**
+     * Stores a Person and their CURRENT RANK
+     */
     private class PersonWithRank {
         public final Person p;
-        public final int rank;
+        public int rank;
 
         public PersonWithRank(Person p, int rank) {
             this.p = p;
