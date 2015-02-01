@@ -264,9 +264,6 @@ public class Person implements Serializable {
      * @return the total number of text messages
      */
     public long getTotalMessages(int sentToThem) {
-        if (countMessages[sentToThem] == 0) {
-            throw new IllegalStateException("Don't know how to handle this.");
-        }
         return countMessages[sentToThem];
     }
 
@@ -276,9 +273,6 @@ public class Person implements Serializable {
      * @return the total number of words
      */
     public long getTotalWords(int sentToThem) {
-        if (countWords[sentToThem] == 0) {
-            throw new IllegalStateException("Don't know how to handle this either.");
-        }
         return countWords[sentToThem];
     }
 
@@ -288,9 +282,6 @@ public class Person implements Serializable {
      * @return the total number of alphabetic characters
      */
     public long getTotalChars(int sentToThem) {
-        if (countChars[sentToThem] == 0) {
-            throw new IllegalStateException("Neither can I handle this.");
-        }
         return countChars[sentToThem];
     }
 
