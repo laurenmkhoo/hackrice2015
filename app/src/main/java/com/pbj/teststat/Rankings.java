@@ -42,7 +42,6 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         }
     }
 
-    String selectedCategory;
     Spinner spinner1;
 
     private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
@@ -54,14 +53,14 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_rankings);
 
         // Get friends from intent, arbitrary ranking at first
-        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        for (Person p : personList) {
-            friends.add(new PersonWithRank(p, i++));
+        for (Person p : (List<Person>) getIntent().getExtras().get(PEOPLE_LIST)) {
+            friends.add(new PersonWithRank(p, 0));
         }
 
         // Make a spinner and other stuff
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner1.setAdapter(spinnerAdapter);
         spinner1.setOnItemSelectedListener(this);
@@ -71,6 +70,9 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         // Make and set Adapter
         listAdapter = new ArrayAdapter<PersonWithRank>(this, android.R.layout.simple_list_item_1, friends);
         listview.setAdapter(listAdapter);
+
+        // Arbitrarily Pick a Starting Category
+        sortList(Person.Category.LONG_TEXTS.name);
     }
 
     @Override
@@ -79,23 +81,26 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         Toast.makeText(getApplicationContext(), descriptions.get(
                 parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
 
-        // Select Category
-        selectedCategory = parent.getItemAtPosition(position).toString();
+        // Select Category and Sort List
+        sortList(parent.getItemAtPosition(position).toString());
+    }
 
+
+    private void sortList(final String selectedCategory) {
         // Sort friends
         listAdapter.sort(new Comparator<PersonWithRank>() {
 
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
-                return (int) (2*rhs.p.getRatingFor(selectedCategory) - 2*lhs.p.getRatingFor(selectedCategory));
+                double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
+                return comparison > 0? 1 : -1;
             }
         });
 
         // Update friends' ranks for appearance
-        for (int i = 0; i < friends.size(); i++) {
-            friends.get(i).rank = i;
+        for (PersonWithRank p : friends) {
+            p.value = p.p.getRatingFor(selectedCategory);
         }
-
     }
 
     @Override
@@ -109,16 +114,16 @@ public class Rankings extends Activity implements OnItemSelectedListener {
      */
     private class PersonWithRank {
         public final Person p;
-        public int rank;
+        public double value;
 
-        public PersonWithRank(Person p, int rank) {
+        public PersonWithRank(Person p, double value) {
             this.p = p;
-            this.rank = rank;
+            this.value = value;
         }
 
 
         public String toString() {
-            return p.getName() + "  " + rank;
+            return p.getName() + "  " + value;
         }
     }
 
