@@ -11,7 +11,7 @@ import android.widget.ListView;
 public class Rankings extends Activity {
 
     Spinner spinner1;
-    private String[] names = {"Profane","Vain","Hungry","Party","Slow Response"};
+    private Category[] names = AllCategories.values();
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -19,7 +19,7 @@ public class Rankings extends Activity {
 
         setContentView(R.layout.activity_rankings);
 
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,  android.R.layout.simple_spinner_item, names);
+        ArrayAdapter<Category> adapter_state = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_item, names);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner1.setAdapter(adapter_state);
 

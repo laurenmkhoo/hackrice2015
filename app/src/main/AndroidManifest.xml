@@ -9,11 +9,11 @@
         android:targetSdkVersion="16" />
 
     <!--
-        why are there two different formats right here?? i don't know.
+<<<<<<< HEAD
+        why are there two different formats right here??
         -->
     <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
@@ -35,14 +35,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".StatisticsPage"
-            android:label="@string/title_activity_statistics_page"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".MessageListActivity"

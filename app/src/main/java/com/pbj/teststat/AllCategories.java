@@ -5,15 +5,20 @@ package com.pbj.teststat;
  */
 public class AllCategories {
 
-    private static final String[] PROFANITY_TAGS = new String[] {};
+    private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner", "fellatio",
+            "camel toe", "chode", "clit", "cooch", "cock", "cum", "cunnilingus", "cunt", "damn", "dam", "dick", "douche",
+            "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
+            "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore"};
 
-    private static Category[] categories = new Category[] {
+
+    private static final Category[] categories = new Category[] {
 
         /*
          * PROFANITY DETECTION
          */
         new Category() {
             public int analyzeText(String text) {
+                text = text.toLowerCase();
                 int count = 0;
                 for (int i = 0; i < text.length(); i++) {
                     for (String profanity : PROFANITY_TAGS) {
@@ -36,10 +41,16 @@ public class AllCategories {
     };
 
 
+    /**
+     * Connects this class to the Person class and ensures that all Cateogries will always be used
+     * @return
+     */
     public static Category[] values() {
         return categories;
     }
 
 
-    private AllCategories() {}
+    private AllCategories() {
+
+    }
 }
