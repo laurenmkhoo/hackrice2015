@@ -1,6 +1,5 @@
 package com.pbj.teststat;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,23 +10,31 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class FriendProfile extends Activity implements OnItemSelectedListener {
+    public static final String PERSON = "PERSON";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
 
-        final ListView listview = (ListView) findViewById(R.id.listview);
-        String[] values = new String[] { "PROFANE RANK", "VAIN RANK", "LONG WORD RANK",
-                "PARTYER RANK", "UNREQUITED LOVE RANK", "STALKER RANK", "LAUGHTER RANK",
-                "KNOW NOTHING RANK", "TRIGGER HAPPY RANK", "NOVELIST RANK"};
+        // Get the person for this friend profile
+        Person p = (Person) getIntent().getExtras().get(PERSON);
+        ((TextView) findViewById(R.id.headerName)).setText(p.getName());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+
+        ListData[] values = new ListData[Person.Category.values().length];
+        int i = 0;
+        for (Person.Category c : Person.Category.values()) {
+            values[i++] = new ListData(c.name, c.formula.calculateFor(p));
+        }
+
+        ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-        listview.setAdapter(adapter);
+        ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
     }
 
 
@@ -61,5 +68,20 @@ public class FriendProfile extends Activity implements OnItemSelectedListener {
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private class ListData {
+        public final String categoryName;
+        public final double value;
+
+        public ListData(String name, Double stat){
+            categoryName = name;
+            value = stat;
+        }
+
+
+        public String toString() {
+            return this.categoryName + " " + "[" +  this.value + "]";
+        }
     }
 }

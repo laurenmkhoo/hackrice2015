@@ -1,35 +1,32 @@
 package com.pbj.teststat;
 
 
-import android.provider.ContactsContract;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by Hellemn on 1/31/2015.
  */
-public class Person {
+public class Person implements Serializable {
     public static final int SENT_TO_THEM = 0;
     public static final int RECEIVED_FROM_THEM = 1;
 
+    // for Serialization
+    private static final long serialVersionUID = 0l;
 
-    private String name; // may be superfluous
-    private String myContact;
-    private HashMap<Category, Long> stats = new HashMap<Category, Long>();
+    // TAGS
     private static final ArrayList<String> PROFANITY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> VANITY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> PARTY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> LAUGH_TAGS = new ArrayList<String>();
     private static final ArrayList<String> KNOW_NOTHING_TAGS = new ArrayList<String>();
     private static final ArrayList<String> BASIC_TAGS = new ArrayList<String>();
-
-    public static final HashMap<String, ArrayList<String>> tagMap;
-    static
-    {
-        tagMap = new HashMap<String, ArrayList<String>>();
+    public static final HashMap<String, ArrayList<String>> tagMap = new HashMap<String, ArrayList<String>>();
+    static {
         tagMap.put("profanity_tags", PROFANITY_TAGS);
         tagMap.put("vanity_tags", VANITY_TAGS);
         tagMap.put("party_tags", PARTY_TAGS);
@@ -39,6 +36,7 @@ public class Person {
 
     }
 
+    // Maps Category Names to Formulas and Indices
     public static enum Category {
         MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, new Formula() {
             @Override
@@ -105,6 +103,12 @@ public class Person {
             public double calculateFor(Person p) {
                 return (1.0*p.getTotalWords(RECEIVED_FROM_THEM)) / p.getTotalMessages(RECEIVED_FROM_THEM);
             }
+        }),
+        SLOW_TEXTER("The Snail", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return -1.0 * p.getAverageResponseTime();
+            }
         });
 
         public final String name;
@@ -125,15 +129,16 @@ public class Person {
     }
 
 
-    private String personName; // may be superfluous
-  //  private ContactsContract.Contacts myContact;
+    private String ID;
+    private String personName; 
+    private String myContact;
     private long[] specialCounts = new long[6];
 
     // Counts of stuff
     private long[] countMessages = new long[] {0, 0};
     private long[] countWords = new long[] {0, 0};
     private long[] countChars = new long[] {0, 0};
-    private long[] countEmoji = new long[] {0, 0};
+//    private long[] countEmoji = new long[] {0, 0};
 
     // Stats for Response Time
     private boolean meSentLast = false;
@@ -141,34 +146,25 @@ public class Person {
     private BigInteger totalResponseTime = BigInteger.ZERO;
     private int numResponseInstances = 0;
 
-    //Rankings
-    private int profRank;
-    private int narcRank;
-    private int sesqRank;
-    private int krunkRank;
-    private int loveRank;
-    private int stalkRank;
-    private int laughRank;
-    private int knowRank;
-    private int basicRank;
-    private int triggerRank;
-    private int novelRank;
 
-     public Person(String number, String inputName){
-        myContact = number;
-        personName = inputName;
-    }
+
+     public Person(String number, String inputName, String ID) {
+         this.myContact = number;
+         this.personName = inputName;
+         this.ID = ID;
+     }
 
     public String getName() {
         return personName;
     }
     public String getNumber(){ return myContact;}
+    public String getID() { return ID; }
+
     /**
      * Updates all my parameters.
      * @param textMessage the text message
      */
     public void update(SMSData textMessage) {
-        assert (textMessage != null);
         boolean meSentToThem = textMessage.getFolderName().equals(SMSData.OUTBOX);
         String lowerCaseText = textMessage.getBody().toLowerCase();
 
@@ -268,6 +264,9 @@ public class Person {
      * @return the total number of text messages
      */
     public long getTotalMessages(int sentToThem) {
+//        if (countMessages[sentToThem] == 0) {
+//            throw new IllegalStateException("Don't know how to handle this.");
+//        }
         return countMessages[sentToThem];
     }
 
@@ -277,6 +276,9 @@ public class Person {
      * @return the total number of words
      */
     public long getTotalWords(int sentToThem) {
+        if (countWords[sentToThem] == 0) {
+            throw new IllegalStateException("Don't know how to handle this either.");
+        }
         return countWords[sentToThem];
     }
 
@@ -286,11 +288,17 @@ public class Person {
      * @return the total number of alphabetic characters
      */
     public long getTotalChars(int sentToThem) {
+        if (countChars[sentToThem] == 0) {
+            throw new IllegalStateException("Neither can I handle this.");
+        }
         return countChars[sentToThem];
     }
 
 
     public double getAverageResponseTime() {
+        if (numResponseInstances == 0) {
+            return 0;
+        }
         return totalResponseTime.divide(BigInteger.valueOf(numResponseInstances)).longValue();
     }
 

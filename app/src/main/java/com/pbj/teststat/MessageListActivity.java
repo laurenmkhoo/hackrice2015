@@ -3,13 +3,12 @@ package com.pbj.teststat;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.CursorLoader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class MessageListActivity extends ListActivity {
 
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
+    static Person userPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,8 @@ public class MessageListActivity extends ListActivity {
 
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
+        TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        userPerson = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -41,7 +42,7 @@ public class MessageListActivity extends ListActivity {
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
             Log.d("Line 43", c.getString(c.getColumnIndexOrThrow("body")).toString());
-            for(int i=0; i < /*c.getCount()*/ 100; i++) {
+            for(int i=0; i < /*c.getCount()*/ 200; i++) {
                 SMSData sms = new SMSData();
                 String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
                 sms.setBody(messageBody);
@@ -61,22 +62,36 @@ public class MessageListActivity extends ListActivity {
 
                 smsList.add(sms);
                 if (!smsPeople.containsKey(contactID)) {
-                    Person newPerson = new Person(contactNumber, contactName);
+                    Person newPerson = new Person(contactNumber, contactName, contactID);
                     smsPeople.put(contactID, newPerson);
                 }
                 smsPeople.get(contactID).update(sms);
 
+                if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
+                    sms.setFolderName(SMSData.OUTBOX);
+                } else {
+                    sms.setFolderName(SMSData.INBOX);
+                }
+                userPerson.update(sms);
+
                 c.moveToNext();
             }
         }
-        System.out.println(smsPeople.keySet());
         c.close();
+
+        ArrayList<Person> peopleList = new ArrayList<Person>();
+        for (String s: smsPeople.keySet()) {
+            peopleList.add(smsPeople.get(s));
+        }
 
 
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
-
+        // Migrate to Rankings
+        Intent intent = new Intent(this, Rankings.class);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
     }
 
     @Override
@@ -145,8 +160,34 @@ public class MessageListActivity extends ListActivity {
         return contactID;
     }
 
+    private String getMyProfile(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,new String[] { ContactsContract.Contacts.LOOKUP_KEY }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactID = null;
+        if (cursor.moveToFirst()) {
+            contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactID;
+    }
+
     public static HashMap<String, Person> getSMSPeople(){
+        if (smsPeople == null){
+            return null;
+        }
         return smsPeople;
     }
 
+    public static Person getUserPerson(){
+        if (userPerson == null){
+            return null;
+        }
+        return userPerson;
+    }
 }

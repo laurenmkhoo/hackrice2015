@@ -1,7 +1,10 @@
 package com.pbj.teststat;
 
-import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.app.Activity;
@@ -11,67 +14,127 @@ import android.widget.AdapterView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 
-public class Rankings extends Activity implements OnItemSelectedListener {
-
-    String selectedCategory;
-    Spinner spinner1;
-    private String[] categories = {Person.Category.MOST_PROFANE.name, Person.Category.MOST_VAIN.name,
-           Person.Category.LONGEST_WORD.name,Person.Category.PARTY_ANIMAL.name, Person.Category.THEY_TEXT_MORE.name,
-           Person.Category.THEY_TEXT_LESS.name, Person.Category.LAUGHER.name, Person.Category.KNOW_NOTHING.name,
-           Person.Category.MISS_BASIC.name,Person.Category.LOTS_OF_TEXTS.name, Person.Category.LONG_TEXTS.name};
-
-    private String[] friends =  {"Lauren", "Bao", "Jesse",
-            "Cassie", "Ben", "Phillip"};;
+public class Rankings extends ActionBarActivity implements OnItemSelectedListener {
+    public static final String PEOPLE_LIST = "PEOPLE_LIST";
 
     private static HashMap<String, String> descriptions = new HashMap<String, String>();
-
     static {
-        descriptions.put(Person.Category.MOST_PROFANE.name, "Definitely does not kiss their mother with their mouth.");
-        descriptions.put(Person.Category.MOST_VAIN.name, "I don't think these friends are aware that the Earth revolves around the sun and not them.");
-        descriptions.put(Person.Category.LONGEST_WORD.name, "These friends are trying to compensate for something with their large-word-knowing");
-        descriptions.put(Person.Category.PARTY_ANIMAL.name, "This friend is probably most likely to get insurance on their liver");
-        descriptions.put(Person.Category.THEY_TEXT_MORE.name, "You should probably text these people a bit more...");
-        descriptions.put(Person.Category.THEY_TEXT_LESS.name, "I wouldn't be surprised if these people had shrines dedicated to you.");
-        descriptions.put(Person.Category.LAUGHER.name, "They're not actually laughing out loud, just so you know.");
-        descriptions.put(Person.Category.KNOW_NOTHING.name, "If you were on a trivia show, don't bother calling these people");
-        descriptions.put(Person.Category.MISS_BASIC.name, "Don't get too close to these people, I hear basic-ness is contagious");
-        descriptions.put(Person.Category.LOTS_OF_TEXTS.name, "The killer of limited text customers world-wide");
-        descriptions.put(Person.Category.LONG_TEXTS.name, "They've probably spent an hour constructing each text");
+        descriptions.put(Person.Category.MOST_PROFANE.name,
+                "Definitely does not kiss their mother with their mouth.");
+        descriptions.put(Person.Category.MOST_VAIN.name,
+                "I don't think these friends are aware that the Earth revolves around the sun and not them.");
+        descriptions.put(Person.Category.LONGEST_WORD.name,
+                "These friends are trying to compensate for something with their large-word-knowing");
+        descriptions.put(Person.Category.PARTY_ANIMAL.name,
+                "This friend is probably most likely to get insurance on their liver");
+        descriptions.put(Person.Category.THEY_TEXT_MORE.name,
+                "You should probably text these people a bit more...");
+        descriptions.put(Person.Category.THEY_TEXT_LESS.name,
+                "I wouldn't be surprised if these people had shrines dedicated to you.");
+        descriptions.put(Person.Category.LAUGHER.name,
+                "They're not actually laughing out loud, just so you know.");
+        descriptions.put(Person.Category.KNOW_NOTHING.name,
+                "If you were on a trivia show, don't bother calling these people");
+        descriptions.put(Person.Category.MISS_BASIC.name,
+                "Don't get too close to these people, I hear basic-ness is contagious");
+        descriptions.put(Person.Category.LOTS_OF_TEXTS.name,
+                "The killer of limited text customers world-wide");
+        descriptions.put(Person.Category.LONG_TEXTS.name,
+                "They've probably spent an hour constructing each text");
     }
+
+    private static final String[] categories = new String[Person.Category.values().length];
+    static {
+        int i = 0;
+        for (Person.Category c : Person.Category.values()) {
+            categories[i++] = c.name;
+        }
+    }
+
+    Spinner spinner1;
+
+    private ArrayList<Person> peopleList;
+    private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
+    private ArrayAdapter<PersonWithRank> listAdapter;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         setContentView(R.layout.activity_rankings);
 
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        // Get friends from intent, arbitrary ranking at first
+        peopleList = (ArrayList<Person>) getIntent().getExtras().get(PEOPLE_LIST);
+        int i = 0;
+        for (Person p : peopleList) {
+            friends.add(new PersonWithRank(p, 0));
+        }
+
+        // Make a spinner and other stuff
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
-        spinner1.setAdapter(adapter_state);
+        spinner1.setAdapter(spinnerAdapter);
         spinner1.setOnItemSelectedListener(this);
 
         final ListView listview = (ListView) findViewById(R.id.listview);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, friends);
-        listview.setAdapter(adapter);
+        // Make and set Adapter
+        listAdapter = new ArrayAdapter<PersonWithRank>(this, android.R.layout.simple_list_item_1, friends);
+        listview.setAdapter(listAdapter);
 
-
+        // Arbitrarily Pick a Starting Category
+        sortList(Person.Category.LONG_TEXTS.name);
     }
 
-    private void orderPersons(){
-        for(int i = 0; i < friends.length; i++){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.rankings_to_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(PEOPLE_LIST, peopleList);
+            startActivity(intent);
         }
-
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getApplicationContext(), descriptions.get(parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
-        selectedCategory = parent.getItemAtPosition(position).toString();
+        // Display Description
+        Toast.makeText(getApplicationContext(), descriptions.get(
+                parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
+
+        // Select Category and Sort List
+        sortList(parent.getItemAtPosition(position).toString());
+    }
+
+
+    private void sortList(final String selectedCategory) {
+        // Sort friends
+        listAdapter.sort(new Comparator<PersonWithRank>() {
+
+            @Override
+            public int compare(PersonWithRank lhs, PersonWithRank rhs) {
+                double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
+                return comparison > 0 ? 1 : -1;
+            }
+        });
+
+        // Update friends' ranks for appearance
+        for (PersonWithRank p : friends) {
+            p.value = p.p.getRatingFor(selectedCategory);
+        }
     }
 
     @Override
@@ -80,6 +143,22 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     }
 
 
+    /**
+     * Stores a Person and their CURRENT RANK
+     */
+    private class PersonWithRank {
+        public final Person p;
+        public double value;
 
+        public PersonWithRank(Person p, double value) {
+            this.p = p;
+            this.value = value;
+        }
+
+
+        public String toString() {
+            return p.getName() + "  " + value;
+        }
+    }
 
 }

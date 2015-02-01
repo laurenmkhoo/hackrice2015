@@ -41,10 +41,14 @@ public class FriendAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.activity_friends, parent, false);
-
         Button senderPerson = (Button) rowView.findViewById(R.id.friendPerson);
+        String display = personMap.get(numberList.get(position)).getName();
+//        System.out.println("LOOK HERE ->" + display + "<- LOOK HERE");
+        if (display == "" || display == null){
+            display = personMap.get(numberList.get(position)).getNumber();
+        }
 
-        senderPerson.setText(personMap.get(numberList.get(position)).getName());
+        senderPerson.setText(display);
 
         TextView textView = (TextView)rowView.findViewById(R.id.friendPerson);
         textView.setTypeface(tf);

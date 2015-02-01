@@ -5,32 +5,27 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-import android.app.ListActivity;
-import android.database.Cursor;
-import android.net.Uri;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 /**
- * Main Activity. Displays a list of numbers.
+ * Main Activity.
  *
  */
+
 public class MainActivity extends ActionBarActivity {
+    private ArrayList<Person> peopleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +47,68 @@ public class MainActivity extends ActionBarActivity {
             tvBold.setTypeface(tfBold);
         }
 
+        // Read in tags
         loadFiles();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if redirected
+        if (getIntent() != null && getIntent().getExtras() != null &&
+                getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
+            peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+        }
+
+        // Turn off buttons when they won't work
+        ((Button) findViewById(R.id.main_btn_me)).setClickable(peopleList == null);
+        ((Button) findViewById(R.id.main_btn_friends)).setClickable(peopleList == null);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     /**
-     * Called when the
-     * @param view
+     * Goes to FriendProfile with userPerson
+     * @param view the view
      */
-    public void goToRankings(View view) {
-        startActivity(new Intent(this, Rankings.class));
-    }
-
     public void goToMyProfile(View view) {
-        startActivity(new Intent(this, MyProfile.class));
+        if (MessageListActivity.getUserPerson() == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(this, FriendProfile.class);
+            intent.putExtra(FriendProfile.PERSON, MessageListActivity.userPerson);
+            intent.putExtra(Rankings.PEOPLE_LIST, peopleList); // why not?
+            startActivity(intent);
+        }
     }
 
-    public void onMessageButtonClick(View view) {
+    /**
+     * Analyzes texts and goes to Rankings
+     * @param view the view
+     */
+    public void onAnalyze(View view) {
         startActivity(new Intent(this, MessageListActivity.class));
     }
 
+    /**
+     * Goes to FriendActivity
+     * @param view
+     */
     public void goToFriends(View view){
-        startActivity(new Intent(this, FriendsActivity.class));
+        if (MessageListActivity.getSMSPeople() == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(this, FriendsActivity.class);
+            intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+            startActivity(intent);
+        }
     }
 
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
@@ -120,4 +156,5 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
+
 }

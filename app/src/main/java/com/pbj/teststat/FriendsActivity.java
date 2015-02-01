@@ -3,6 +3,7 @@ package com.pbj.teststat;
 import android.app.ListActivity;
 import android.graphics.Typeface;
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -71,4 +73,10 @@ public class FriendsActivity extends ListActivity  {
         }
         return views;
     }
+    public void goToFriendProfile(View view) {
+        Intent intent = new Intent(this, FriendProfile.class);
+        intent.putExtra(FriendProfile.PERSON, MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
+        startActivity(intent);
+    }
+
 }
