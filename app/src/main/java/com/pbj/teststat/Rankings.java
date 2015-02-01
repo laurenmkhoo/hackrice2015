@@ -40,7 +40,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     static {
         int i = 0;
         for (Person.Category c : Person.Category.values()) {
-            categories[i] = c.name;
+            categories[i++] = c.name;
         }
     }
 
@@ -55,9 +55,9 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_rankings);
 
         // Get friends from intent, arbitrary ranking at first
-//        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
+        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        for (Person p : MainActivity.PEOPLE_LIST) {
+        for (Person p : personList) {
             PersonWithRank tempPerson = new PersonWithRank(p, i++);
             System.out.println("TEMP_PERSON: " + tempPerson);
             friends.add(tempPerson);

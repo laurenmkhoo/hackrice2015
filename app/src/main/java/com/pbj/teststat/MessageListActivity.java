@@ -95,7 +95,9 @@ public class MessageListActivity extends ListActivity {
         setListAdapter(new ListAdapter(this, smsList));
 
         // Migrate to Rankings
-        startActivity(new Intent(this, Rankings.class));
+        Intent intent = new Intent(this, Rankings.class);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
     }
 
     @Override
