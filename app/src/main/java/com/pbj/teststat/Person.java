@@ -4,25 +4,115 @@ package com.pbj.teststat;
 import android.provider.ContactsContract;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Hellemn on 1/31/2015.
  */
-
 public class Person {
     public static final int SENT_TO_THEM = 0;
     public static final int RECEIVED_FROM_THEM = 1;
 
-    private String name; // may be superfluous
-    private ContactsContract.Contacts myContact;
-    private Map<Category, Long> stats = new HashMap<Category, Long>();
-    {
-        for (Category cat : AllCategories.values()) {
-            stats.put(cat, new Long(0));
+    private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner", "fellatio",
+            "camel toe", "chode", "clit", "cooch", "cock", "cum", "cunnilingus", "cunt", "damn", "dam", "dick", "douche",
+            "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
+            "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore", "ho"};
+
+    private static final String[] VANITY_TAGS = new String[] {"i", "me", "my", "moi"};
+    private static final String[] PARTY_TAGS = new String[] {};
+    private static final String[] LAUGH_TAGS = new String[] {"haha", "hehe", "keke", "jaja", "huehue",
+            "laugh", "lawl", "hoho", "lol", "rofl", "baha", "pwaha", "mwaha", "lmao", "roflmao"};
+    private static final String[] KNOW_NOTHING_TAGS = new String[] {};
+    private static final String[] BASIC_TAGS = new String[] {};
+
+    public static enum Category {
+        MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[0] / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        MOST_VAIN(1, "Narcissus", VANITY_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[1] / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        LONGEST_WORD("Sesquipedalian", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.getTotalChars(RECEIVED_FROM_THEM) / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        PARTY_ANIMAL(2, "Kaiser of Krunk", PARTY_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[2] / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        THEY_TEXT_MORE("Stalker", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.getTotalMessages(RECEIVED_FROM_THEM) / p.getTotalMessages(SENT_TO_THEM);
+            }
+        }),
+        THEY_TEXT_LESS("Unrequited Love", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.getTotalMessages(SENT_TO_THEM) / p.getTotalMessages(RECEIVED_FROM_THEM);
+            }
+        }),
+        LAUGHER(3, "The Laugher", LAUGH_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[3] / p.getTotalMessages(RECEIVED_FROM_THEM);
+            }
+        }),
+        KNOW_NOTHING(4, "The Know Nothing", KNOW_NOTHING_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[4] / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        MISS_BASIC(5, "Miss Basic", BASIC_TAGS, new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.specialCounts[5] / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        LOTS_OF_TEXTS("Trigger Happy", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.getTotalMessages(RECEIVED_FROM_THEM) / p.getTotalWords(RECEIVED_FROM_THEM);
+            }
+        }),
+        LONG_TEXTS("The Novelist", new Formula() {
+            @Override
+            public double calculateFor(Person p) {
+                return p.getTotalWords(RECEIVED_FROM_THEM) / p.getTotalMessages(RECEIVED_FROM_THEM);
+            }
+        });
+
+        public final String name;
+        public final Integer index;
+        public final Formula formula;
+        public final String[] tags;
+
+        Category(String name, Formula formula) {
+            this(null, name, null, formula);
+        }
+
+        Category(Integer index, String name, String[] tags, Formula formula) {
+            this.index = index;
+            this.name = name;
+            this.tags = tags;
+            this.formula = formula;
         }
     }
+
+
+    private String name; // may be superfluous
+    private ContactsContract.Contacts myContact;
+    private long[] specialCounts = new long[6];
 
     // Counts of stuff
     private long[] countMessages = new long[] {0, 0};
@@ -66,8 +156,10 @@ public class Person {
         }
 
         // Update each category
-        for (Category cat : stats.keySet()) {
-            stats.put(cat, stats.get(cat) + cat.analyzeText(lowerCaseText));
+        for (Category cat : Category.values()) {
+            if (cat.index != null) {
+                specialCounts[cat.index] += countTagInstances(lowerCaseText, cat.tags);
+            }
         }
 
         // Update all counts
@@ -129,10 +221,10 @@ public class Person {
      * @param category a constant from AllCategories
      * @return
      */
-    public double getCountOf(int category) {
-        for (Category cat : AllCategories.values()) {
-            if (cat.getUniqueID() == category) {
-                return stats.get(cat);
+    public double getRatingFor(String category) {
+        for (Category cat : Category.values()) {
+            if (cat.name == category) {
+                return cat.formula.calculateFor(this);
             }
         }
         throw new IllegalStateException("Should've used the right constant");
@@ -170,5 +262,21 @@ public class Person {
         return totalResponseTime.divide(BigInteger.valueOf(numResponseInstances)).longValue();
     }
 
-
+    /**
+     * TEXT BETTER BE IN LOWER CASE BY NOW!
+     * @param text
+     * @param tags
+     * @return
+     */
+    private static final double countTagInstances(String text, final String[] tags) {
+        int count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            for (String tag : tags) {
+                if (text.startsWith(tag, i)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
