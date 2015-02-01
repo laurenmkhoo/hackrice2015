@@ -8,10 +8,6 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
-    <!--
-<<<<<<< HEAD
-        why are there two different formats right here??
-    -->
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_READ_PHONE_STATE" />
@@ -57,9 +53,11 @@
         <activity
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends"
-            android:screenOrientation="portrait">
-            android:name=".Profile"
-            android:label="@string/title_activity_profile" >
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".FriendProfile"
