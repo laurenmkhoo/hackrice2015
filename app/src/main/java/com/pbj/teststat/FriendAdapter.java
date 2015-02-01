@@ -36,7 +36,7 @@ public class FriendAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.activity_friends, parent, false);
         Button senderPerson = (Button) rowView.findViewById(R.id.friendPerson);
         String display = personMap.get(numberList.get(position)).getName();
-        System.out.println("LOOK HERE ->" + display + "<- LOOK HERE");
+//        System.out.println("LOOK HERE ->" + display + "<- LOOK HERE");
         if (display == "" || display == null){
             display = personMap.get(numberList.get(position)).getNumber();
         }
