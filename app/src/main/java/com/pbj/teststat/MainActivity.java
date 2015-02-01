@@ -28,8 +28,8 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
     private static final String PREFS_NAME = "preferences";
-    public static ArrayList<Person> PEOPLE_LIST = new ArrayList<Person>();
     public static ArrayList<Person> peopleList;
+    private boolean firstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,10 @@ public class MainActivity extends ActionBarActivity {
      * @param view the view
      */
     public void onAnalyze(View view) {
-        startActivity(new Intent(this, MessageListActivity.class));
+        Intent i = new Intent(this, MessageListActivity.class);
+        i.putExtra("FIRST_TIME", firstTime);
+        firstTime = false;
+        startActivity(i);
     }
 
     /**
@@ -164,31 +167,21 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
-/*
+
     @Override
     public void onDestroy() {
         // Save UI state changes to the savedInstanceState.
         // This bundle will be passed to onCreate if the process is
         // killed and restarted.
         super.onDestroy();
-
-        SerializationUtil serial = new SerializationUtil();
-        //serialize to file
-        serial.startSerialize("saved_instance.txt");
-        for (Person p: MainActivity.PEOPLE_LIST) {
-            try {
-                serial.serialize(p);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        String allPeople = "";
+        for (Person p: peopleList) {
+            allPeople += p.getStringRepresentation() + " ";
         }
 
-        serial.serializeFinish();
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("loadedBefore", true);
+        editor.putString("people", allPeople);
 
         // Commit the edits!
         editor.commit();
@@ -197,27 +190,27 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
+        peopleList = new ArrayList<Person>();
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        boolean loadedBefore = settings.getBoolean("loadedBefore", false);
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        String smooshedPeople = settings.getString("allPeople", "");
 
-        if (loadedBefore) {
-            SerializationUtil serial = new SerializationUtil();
-            serial.startDeserialize("saved_instance.txt");
+        String [] people = smooshedPeople.split(" ");
 
-            MainActivity.PEOPLE_LIST = new ArrayList<Person>();
+        for (int i = 0; i < people.length; i++) {
+            String temp = people[i];
+            String [] x = temp.split(";");
 
-            try {
-                while (true) {
-                    MainActivity.PEOPLE_LIST.add((Person)serial.deserialize());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                serial.deserializeFinish();
-            }
+            Person p = new Person(x[2], x[1], x[0]);
+            p.setSpecialCounts(Long.parseLong(x[3]), Long.parseLong(x[4]), Long.parseLong(x[5]), Long.parseLong(x[6]), Long.parseLong(x[7]), Long.parseLong(x[8]));
+            p.setCountMessages(Long.parseLong(x[9]), Long.parseLong(x[10]));
+            p.setCountWords(Long.parseLong(x[11]), Long.parseLong(x[12]));
+            p.setCountChars(Long.parseLong(x[13]), Long.parseLong(x[14]));
+
+            peopleList.add(p);
         }
+
     }
-    */
+
 
 }

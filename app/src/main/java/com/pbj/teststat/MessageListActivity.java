@@ -30,6 +30,12 @@ public class MessageListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        boolean firstTime = getIntent().getExtras().getBoolean("FIRST_TIME");
+
+        if (firstTime) {
+
+        }
+
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
