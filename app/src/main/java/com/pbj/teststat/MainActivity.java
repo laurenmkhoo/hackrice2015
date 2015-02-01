@@ -51,6 +51,8 @@ public class MainActivity extends ActionBarActivity {
             TextView tvBold = (TextView)(viewsBold.get(i));
             tvBold.setTypeface(tfBold);
         }
+
+        loadFiles();
     }
 
     /**
@@ -85,9 +87,6 @@ public class MainActivity extends ActionBarActivity {
 
 
     private void loadFiles() {
-        ArrayList<String> THE_PARTY_ANIMAL_TAGS = new ArrayList<String>();
-
-
         String result = "";
         Resources res = getResources();
         Field [] fields= R.raw.class.getFields();
@@ -97,21 +96,21 @@ public class MainActivity extends ActionBarActivity {
                 //String tempField = fields[count].getName();
                 //System.out.println("FIELD COUNT: " + fields[count].getInt(fields[count]));
                 //System.out.println("INTEGER OF PARTY ANIMAL: " + R.raw.the_party_animal);
+                String name = fields[count].getName();
+                ArrayList<String> currentArrayList = Person.tagMap.get(name);
+
                 InputStream input = res.openRawResource(fields[count].getInt(fields[count]));
                 Scanner scanner = new Scanner(input);
 
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    THE_PARTY_ANIMAL_TAGS.add(line);
+                    currentArrayList.add(line);
                 }
                 scanner.close();
             } catch (Exception e) {
                 e.printStackTrace();
                 result = "Error: idk.";
             }
-            Log.i("Raw Asset: ", fields[count].getName());
         }
-
-        System.out.println("RESULTSFILES: " + fields);
     }
 }

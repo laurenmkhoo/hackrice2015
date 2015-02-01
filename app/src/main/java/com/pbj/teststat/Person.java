@@ -4,6 +4,9 @@ package com.pbj.teststat;
 import android.provider.ContactsContract;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Hellemn on 1/31/2015.
@@ -12,17 +15,25 @@ public class Person {
     public static final int SENT_TO_THEM = 0;
     public static final int RECEIVED_FROM_THEM = 1;
 
-    private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner", "fellatio",
-            "camel toe", "chode", "clit", "cooch", "cock", "cum", "cunnilingus", "cunt", "damn", "dam", "dick", "douche",
-            "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
-            "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore", "ho"};
+    private static final ArrayList<String> PROFANITY_TAGS = new ArrayList<String>();
+    private static final ArrayList<String> VANITY_TAGS = new ArrayList<String>();
+    private static final ArrayList<String> PARTY_TAGS = new ArrayList<String>();
+    private static final ArrayList<String> LAUGH_TAGS = new ArrayList<String>();
+    private static final ArrayList<String> KNOW_NOTHING_TAGS = new ArrayList<String>();
+    private static final ArrayList<String> BASIC_TAGS = new ArrayList<String>();
 
-    private static final String[] VANITY_TAGS = new String[] {"i", "me", "my", "moi"};
-    private static final String[] PARTY_TAGS = new String[] {};
-    private static final String[] LAUGH_TAGS = new String[] {"haha", "hehe", "keke", "jaja", "huehue",
-            "laugh", "lawl", "hoho", "lol", "rofl", "baha", "pwaha", "mwaha", "lmao", "roflmao"};
-    private static final String[] KNOW_NOTHING_TAGS = new String[] {};
-    private static final String[] BASIC_TAGS = new String[] {};
+    public static final HashMap<String, ArrayList<String>> tagMap;
+    static
+    {
+        tagMap = new HashMap<String, ArrayList<String>>();
+        tagMap.put("profanity_tags", PROFANITY_TAGS);
+        tagMap.put("vanity_tags", VANITY_TAGS);
+        tagMap.put("party_tags", PARTY_TAGS);
+        tagMap.put("laugh_tags", LAUGH_TAGS);
+        tagMap.put("know_nothing_tags", KNOW_NOTHING_TAGS);
+        tagMap.put("basic_tags", BASIC_TAGS);
+
+    }
 
     public static enum Category {
         MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, new Formula() {
@@ -95,13 +106,13 @@ public class Person {
         public final String name;
         public final Integer index;
         public final Formula formula;
-        public final String[] tags;
+        public final List<String> tags;
 
         Category(String name, Formula formula) {
             this(null, name, null, formula);
         }
 
-        Category(Integer index, String name, String[] tags, Formula formula) {
+        Category(Integer index, String name, List<String> tags, Formula formula) {
             this.index = index;
             this.name = name;
             this.tags = tags;
@@ -268,7 +279,7 @@ public class Person {
      * @param tags
      * @return
      */
-    private static final double countTagInstances(String text, final String[] tags) {
+    private static final double countTagInstances(String text, final List<String> tags) {
         int count = 0;
         for (int i = 0; i < text.length(); i++) {
             for (String tag : tags) {
