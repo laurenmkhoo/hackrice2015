@@ -59,6 +59,10 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void goToFriends(View view){
+        startActivity(new Intent(this, FriendsActivity.class));
+    }
+
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
         ArrayList<View> views = new ArrayList<View>();
 

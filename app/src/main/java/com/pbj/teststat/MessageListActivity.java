@@ -18,17 +18,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class MessageListActivity extends ListActivity {
 
+    List<SMSData> smsList;
+    static HashMap<String, Person> smsPeople;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_message_list);
 
-        List<SMSData> smsList = new ArrayList<SMSData>();
+        smsList = new ArrayList<SMSData>();
+        smsPeople = new HashMap<String, Person>();
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -39,11 +43,15 @@ public class MessageListActivity extends ListActivity {
             Log.d("Line 43", c.getString(c.getColumnIndexOrThrow("body")).toString());
             for(int i=0; i < /*c.getCount()*/ 20; i++) {
                 SMSData sms = new SMSData();
-                sms.setBody(c.getString(c.getColumnIndexOrThrow("body")).toString());
-                sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
+                String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
+                sms.setBody(messageBody);
+                String contactNumber = c.getString(c.getColumnIndexOrThrow("address")).toString();
+                sms.setNumber(contactNumber);
                 sms.setId(c.getString(c.getColumnIndexOrThrow("_id")).toString());
                 sms.setTime(c.getString(c.getColumnIndexOrThrow("date")).toString());
-                sms.setName(getContactName(getApplicationContext(), c.getString(c.getColumnIndexOrThrow("address"))));
+                String contactName = getContactName(getApplicationContext(), c.getString(c.getColumnIndexOrThrow("address")));
+                sms.setName(contactName);
+                String contactID = getContactID(getApplicationContext(), c.getString(c.getColumnIndexOrThrow("address")));
 
                 if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
                     sms.setFolderName(SMSData.INBOX);
@@ -51,12 +59,17 @@ public class MessageListActivity extends ListActivity {
                     sms.setFolderName(SMSData.OUTBOX);
                 }
 
-
                 smsList.add(sms);
+                if (!smsPeople.containsKey(contactID)) {
+                    Person newPerson = new Person(contactNumber, contactName);
+                    smsPeople.put(contactID, newPerson);
+                }
+                smsPeople.get(contactID).update(sms);
 
                 c.moveToNext();
             }
         }
+        System.out.println(smsPeople.keySet());
         c.close();
 
 
@@ -98,7 +111,7 @@ public class MessageListActivity extends ListActivity {
 
     }
 
-    public String getContactName(Context context, String phoneNumber) {
+    private String getContactName(Context context, String phoneNumber) {
         ContentResolver cr = context.getContentResolver();
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
         Cursor cursor = cr.query(uri,new String[] { ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null);
@@ -113,6 +126,27 @@ public class MessageListActivity extends ListActivity {
             cursor.close();
         }
         return contactName;
+    }
+
+    private String getContactID(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,new String[] { ContactsContract.Contacts.LOOKUP_KEY }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactID = null;
+        if (cursor.moveToFirst()) {
+            contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactID;
+    }
+
+    public static HashMap<String, Person> getSMSPeople(){
+        return smsPeople;
     }
 
 }

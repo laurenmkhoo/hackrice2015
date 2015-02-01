@@ -16,7 +16,7 @@ public class Person {
     public static final int RECEIVED_FROM_THEM = 1;
 
     private String name; // may be superfluous
-    private ContactsContract.Contacts myContact;
+    private String myContact;
     private Map<Category, Long> stats = new HashMap<Category, Long>();
     {
         for (Category cat : AllCategories.values()) {
@@ -36,11 +36,28 @@ public class Person {
     private BigInteger totalResponseTime = BigInteger.ZERO;
     private int numResponseInstances = 0;
 
+    //Rankings
+    private int profRank;
+    private int narcRank;
+    private int sesqRank;
+    private int krunkRank;
+    private int loveRank;
+    private int stalkRank;
+    private int laughRank;
+    private int knowRank;
+    private int basicRank;
+    private int triggerRank;
+    private int novelRank;
+
+     public Person(String number, String inputName){
+        myContact = number;
+        name = inputName;
+    }
 
     public String getName() {
         return name;
     }
-
+    public String getNumber(){ return myContact;}
     /**
      * Updates all my parameters.
      * @param textMessage
@@ -86,7 +103,7 @@ public class Person {
 
         // Clear starting whitespace
         int i = 0;
-        while ('a' > (c = text.charAt(i++)) || c > 'z');
+        while (i < text.length() && ('a' > (c = text.charAt(i++)) || c > 'z'));
 
         // Loop through the rest of the text
         boolean wasChar = false;

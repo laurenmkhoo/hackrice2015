@@ -11,9 +11,10 @@
     <!--
 <<<<<<< HEAD
         why are there two different formats right here??
-        -->
+    -->
     <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
@@ -42,7 +43,11 @@
         </activity>
         <activity
             android:name=".Rankings"
-            android:label="Rankings">
+            android:label="Rankings" >
+        </activity>
+        <activity
+            android:name=".FriendsActivity"
+            android:label="@string/title_activity_friends" >
         </activity>
     </application>
 
