@@ -27,5 +27,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_message_list">Activity Message List</string>
     <string name="title_activity_friends">Friends</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_friend_profile">FriendProfile</string>
+    <string name="title_activity_my_profile">MyProfile</string>
 
 </resources>

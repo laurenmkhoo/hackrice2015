@@ -48,6 +48,16 @@
         <activity
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends" >
+            android:name=".Profile"
+            android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
+            android:name=".FriendProfile"
+            android:label="@string/title_activity_friend_profile" >
+        </activity>
+        <activity
+            android:name=".MyProfile"
+            android:label="@string/title_activity_my_profile" >
         </activity>
     </application>
 
