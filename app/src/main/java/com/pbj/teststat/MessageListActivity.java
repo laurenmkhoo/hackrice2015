@@ -1,8 +1,11 @@
 package com.pbj.teststat;
 
 import android.app.ListActivity;
+import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +48,7 @@ public class MessageListActivity extends ListActivity {
                     sms.setFolderName("sent");
                 }
 
+
                 smsList.add(sms);
 
                 c.moveToNext();
@@ -52,12 +56,12 @@ public class MessageListActivity extends ListActivity {
         }
         c.close();
 
+
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

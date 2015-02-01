@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * Created by Hellemn on 1/31/2015.
  */
+/*
 public class Person {
 
     private String name; // may be superfluous
@@ -36,4 +37,4 @@ public class Person {
     }
 
 
-}
+}*/
