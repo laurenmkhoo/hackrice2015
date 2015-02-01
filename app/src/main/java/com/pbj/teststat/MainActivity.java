@@ -56,7 +56,8 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
 
         // Check if redirected
-        if (getIntent() != null && getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
+        if (getIntent() != null && getIntent().getExtras() != null &&
+                getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
             peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
         }
 
