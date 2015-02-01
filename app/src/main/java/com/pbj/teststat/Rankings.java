@@ -243,9 +243,15 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
         SharedPreferences settings = getSharedPreferences("preferences", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("allPeople", allPeople);
-
-        // Commit the edits!
         editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
+        }
     }
 
 }
