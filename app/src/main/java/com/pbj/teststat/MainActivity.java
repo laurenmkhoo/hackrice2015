@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Called when the
+     * Called when the Rankings button is clicked
      * @param view
      */
     public void goToRankings(View view) {
@@ -66,11 +66,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void goToMyProfile(View view) {
-        Intent intent = new Intent(this, MyProfile.class);
+        Intent intent = new Intent(this, FriendProfile.class);
+        intent.putExtra(FriendProfile.PERSON, mePerson);
         startActivity(intent);
     }
 
-    public void onMessageButtonClick(View view) {
+    public void onAnalyze(View view) {
         startActivity(new Intent(this, MessageListActivity.class));
     }
 

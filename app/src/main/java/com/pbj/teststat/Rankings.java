@@ -57,7 +57,6 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         // Get friends from intent, arbitrary ranking at first
 //        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        System.out.println("PEOPLE_LIST: " + MainActivity.PEOPLE_LIST);
         for (Person p : MainActivity.PEOPLE_LIST) {
             PersonWithRank tempPerson = new PersonWithRank(p, i++);
             System.out.println("TEMP_PERSON: " + tempPerson);

@@ -83,7 +83,8 @@ public class MessageListActivity extends ListActivity {
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
-
+        // Migrate to Rankings
+        startActivity(new Intent(this, Rankings.class));
     }
 
     @Override

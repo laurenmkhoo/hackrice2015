@@ -159,11 +159,11 @@ public class Person implements Serializable {
     private int triggerRank;
     private int novelRank;
 
-     public Person(String number, String inputName, String ID){
-        myContact = number;
-        personName = inputName;
+     public Person(String number, String inputName, String ID) {
+         this.myContact = number;
+         this.personName = inputName;
          this.ID = ID;
-    }
+     }
 
     public String getName() {
         return personName;
@@ -176,7 +176,6 @@ public class Person implements Serializable {
      * @param textMessage the text message
      */
     public void update(SMSData textMessage) {
-        assert (textMessage != null);
         boolean meSentToThem = textMessage.getFolderName().equals(SMSData.OUTBOX);
         String lowerCaseText = textMessage.getBody().toLowerCase();
 
@@ -299,6 +298,9 @@ public class Person implements Serializable {
 
 
     public double getAverageResponseTime() {
+        if (numResponseInstances == 0) {
+            return 0;
+        }
         return totalResponseTime.divide(BigInteger.valueOf(numResponseInstances)).longValue();
     }
 
