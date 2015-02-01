@@ -11,19 +11,19 @@ import java.util.Map;
 /**
  * Created by Hellemn on 1/31/2015.
  */
-/*
+
 public class Person {
     public static final int SENT_TO_THEM = 0;
     public static final int RECEIVED_FROM_THEM = 1;
 
     private String name; // may be superfluous
     private ContactsContract.Contacts myContact;
-    private Map<Category, Long> stats = new HashMap<>();
-//    { // enum method from Java 8, I'll try and get the retro compiler working
-//        for (Category cat : Category.values()) {
-//            stats.put(cat, new Long(0));
-//        }
-//    }
+    private Map<Category, Long> stats = new HashMap<Category, Long>();
+    { // enum method from Java 8, I'll try and get the retro compiler working
+        for (Category cat : AllCategories.values()) {
+            stats.put(cat, new Long(0));
+        }
+    }
 
     // Counts of stuff
     private long[] countMessages = new long[] {0, 0};
@@ -33,7 +33,7 @@ public class Person {
     // Stats for Response Time
     private Long lastSentToThemTime = null;
     private boolean meSentLast = false;
-    private List<Long> responseTimes = new ArrayList<>();
+    private List<Long> responseTimes = new ArrayList<Long>();
 
 
     public String getName() {
@@ -44,7 +44,7 @@ public class Person {
      * Updates all my parameters.
      * @param textMessage
      */
-/*    public void update(SMSData textMessage) {
+    public void update(SMSData textMessage) {
         assert (textMessage != null);
         boolean meSentToThem = textMessage.getFolderName() == SMSData.OUTBOX;
 
@@ -62,7 +62,7 @@ public class Person {
 
         // Update each category
         for (Category cat : stats.keySet()) {
-            stats.put(cat, stats.get(cat) + cat.countOccurances(textMessage.getBody()));
+            stats.put(cat, stats.get(cat) + cat.analyzeText(textMessage.getBody()));
         }
 
         // Update all counts
@@ -74,7 +74,7 @@ public class Person {
     /**
      * ONLY counts alphabetical characters into totalChars
      * @param text
-
+    */
     public void countMessagesAndWordsAndChars(final String text, final int sentToThem) {
         assert (text != null);
         char c;
@@ -130,7 +130,7 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-/*    public long getTotalMessages(int sentToThem) {
+    public long getTotalMessages(int sentToThem) {
         return countMessages[sentToThem];
     }
 
@@ -139,7 +139,7 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-/*    public long getTotalWords(int sentToThem) {
+    public long getTotalWords(int sentToThem) {
         return countWords[sentToThem];
     }
 
@@ -148,9 +148,9 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-/*    public long getTotalChars(int sentToThem) {
+    public long getTotalChars(int sentToThem) {
         return countChars[sentToThem];
     }
 
 
-}*/
+}
