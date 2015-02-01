@@ -197,6 +197,8 @@ public class MessageListActivity extends ListActivity {
         return smsPeople;
     }
 
+
+
     public static Person getUserPerson(){
         if (userPerson == null){
             return null;

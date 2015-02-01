@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hackrice2015.iml" filepath="$PROJECT_DIR$/hackrice2015.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hackrice2015_versionB.iml" filepath="$PROJECT_DIR$/hackrice2015_versionB.iml" />
     </modules>
   </component>
 </project>

@@ -311,6 +311,7 @@ public class Person implements Serializable {
         return count;
     }
 
+
     public String getStringRepresentation() {
         String s = "";
         s += ID + ";" + personName + ";" + myContact + ";";
