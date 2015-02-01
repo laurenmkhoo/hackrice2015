@@ -63,9 +63,12 @@ public class MainActivity extends ActionBarActivity {
         startActivity(new Intent(this, Rankings.class));
     }
 
+    public void goToMyProfile(View view) {
+        startActivity(new Intent(this, MyProfile.class));
+    }
+
     public void onMessageButtonClick(View view) {
-        Intent intent = new Intent(this, MessageListActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MessageListActivity.class));
     }
 
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){

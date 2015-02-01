@@ -21,13 +21,13 @@
         android:background="#e26881"
         android:tag="button"
         style="@style/button"
-        android:onClick="goToRankings"/>
+        android:onClick="goToMyProfile"/>
 
     <Button android:text="friends"
         android:background="#e27e51"
         android:tag="button"
         style="@style/button"
-        android:clickable="false"/>
+        android:onClick="goToRankings"/>
 
     <Button android:text="analyze"
         android:background="#ae658e"
