@@ -42,6 +42,7 @@ public class FriendAdapter extends ArrayAdapter<String> {
         }
 
         senderPerson.setText(display);
+        senderPerson.setContentDescription(personMap.get(numberList.get(position)).getID());
 
         return rowView;
     }

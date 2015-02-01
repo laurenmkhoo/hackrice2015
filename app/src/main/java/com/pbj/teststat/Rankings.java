@@ -101,11 +101,28 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.rankings_to_home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(PEOPLE_LIST, peopleList);
-            startActivity(intent);
+        Intent intent;
+        switch (item.getItemId()) {
+
+           // Go Home
+            case R.id.rankings_to_home:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra(PEOPLE_LIST, peopleList);
+                break;
+
+            // Go to Friends list
+            case R.id.rankings_to_friends:
+                intent = new Intent(this, FriendsActivity.class);
+                intent.putExtra(PEOPLE_LIST, peopleList);
+                break;
+
+            // Somehow nothing picked
+            default:
+                return super.onOptionsItemSelected(item);
         }
+
+        // Go where we decided to go
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
 
