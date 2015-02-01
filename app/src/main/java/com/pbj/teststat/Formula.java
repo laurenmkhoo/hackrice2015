@@ -5,11 +5,5 @@ package com.pbj.teststat;
  */
 
 public interface Formula {
-
-    /**
-     *
-     * @param text MUST BE IN LOWER CASE
-     * @return
-     */
     public abstract double calculateFor(Person p);
 }

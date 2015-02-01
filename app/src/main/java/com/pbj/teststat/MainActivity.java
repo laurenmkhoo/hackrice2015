@@ -61,8 +61,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onMessageButtonClick(View view) {
-        Intent intent = new Intent(this, MessageListActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MessageListActivity.class));
     }
 
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
