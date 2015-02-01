@@ -184,7 +184,12 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
 
         public String toString() {
-            return p.getName() + "  " + value;
+            String display = p.getName();
+            if (display == "" || display == null){
+                display = p.getNumber();
+            }
+
+            return display + "  " + Math.floor(value * 100)/100;
         }
     }
 

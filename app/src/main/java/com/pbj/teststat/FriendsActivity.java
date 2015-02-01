@@ -1,11 +1,16 @@
 package com.pbj.teststat;
 
 import android.app.ListActivity;
+import android.graphics.Typeface;
+import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -17,12 +22,21 @@ public class FriendsActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_friends);
+        // setContentView(R.layout.activity_friends); //new
+        View header = getLayoutInflater().inflate(R.layout.header, null);
+        ListView listView = getListView();
+        listView.addHeaderView(header);
         setListAdapter(new FriendAdapter(this, MessageListActivity.getSMSPeople()));
+
+        //font manipulation occurs  here
+        TextView tv = (TextView)findViewById(R.id.topheader);
+        Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
+        tv.setTypeface(tfBold);
 
         // Save people list for future
         peopleList = (ArrayList<String>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,6 +60,23 @@ public class FriendsActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
+        ArrayList<View> views = new ArrayList<View>();
+        final int childCount = root.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = root.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                views.addAll(getViewsByTag((ViewGroup) child, tag));
+            }
+
+            final Object tagObj = child.getTag();
+            if (tagObj != null && tagObj.equals(tag)) {
+                views.add(child);
+            }
+
+        }
+        return views;
+    }
     public void goToFriendProfile(View view) {
         Intent intent = new Intent(this, FriendProfile.class);
         intent.putExtra(FriendProfile.PERSON,

@@ -33,14 +33,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // font manipulation occurs from here
-        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.fun), "button");
+        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "button");
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
         for (int i = 0; i < views.size(); i++) {
             TextView tv = (TextView)(views.get(i));
             tv.setTypeface(tf);
         }
-        // More font manipulation
-        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.fun), "header");
+
+        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "header");
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_INLINE.otf");
         for (int i = 0; i < viewsBold.size(); i++) {
             TextView tvBold = (TextView)(viewsBold.get(i));
