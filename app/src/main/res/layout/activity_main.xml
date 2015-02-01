@@ -34,7 +34,7 @@
         android:background="#ae658e"
         style="@style/button"
         android:tag="button"
-        android:onClick="onMessageButtonClick" />
+        android:onClick="onAnalyze" />
 
     <Button
         style="@style/button"

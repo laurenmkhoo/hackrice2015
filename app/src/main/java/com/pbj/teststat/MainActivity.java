@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Called when the
+     * Called when the Rankings button is clicked
      * @param view
      */
     public void goToRankings(View view) {
@@ -69,11 +69,11 @@ public class MainActivity extends ActionBarActivity {
         if (MessageListActivity.getMe() == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
-            startActivity(new Intent(this, MyProfile.class));
+            startActivity(new Intent(this, FriendProfile.class));
         }
     }
 
-    public void onMessageButtonClick(View view) {
+    public void onAnalyze(View view) {
         startActivity(new Intent(this, MessageListActivity.class));
     }
 
