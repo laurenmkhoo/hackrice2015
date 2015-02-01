@@ -62,8 +62,8 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Turn off buttons when they won't work
-        ((Button) findViewById(R.id.main_btn_me)).setClickable(peopleList == null);
-        ((Button) findViewById(R.id.main_btn_friends)).setClickable(peopleList == null);
+        ((Button) findViewById(R.id.main_btn_me)).setClickable(peopleList != null);
+        ((Button) findViewById(R.id.main_btn_friends)).setClickable(peopleList != null);
     }
 
 
