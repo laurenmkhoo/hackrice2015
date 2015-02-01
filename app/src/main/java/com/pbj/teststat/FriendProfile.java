@@ -35,7 +35,12 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
         // Get the person for this friend profile
         p = (Person) getIntent().getExtras().get(PERSON);
-        ((TextView) findViewById(R.id.headerName)).setText(p.getName());
+        String name = p.getName();
+        if(p.getID().equals("meeeeee")){
+             name = "You";
+        }
+
+        ((TextView) findViewById(R.id.headerName)).setText(name);
 
 
         ListData[] values = new ListData[Person.Category.values().length];
@@ -46,7 +51,6 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-//        CustomListAdapter cla = new CustomListAdapter(YourActivity.this , R.layout.custom_textview , mList);
         ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
 
         // Set up back on Action Bar
@@ -142,7 +146,8 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
 
         public String toString() {
-            return this.categoryName + " " + "[" +  this.value + "]";
+            double val = Math.floor(this.value * 100)/100;
+            return this.categoryName + " " + "[" +  val + "]";
         }
     }
 
