@@ -44,7 +44,11 @@
         </activity>
         <activity
             android:name=".Rankings"
-            android:label="Rankings" >
+            android:label="Rankings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".FriendsActivity"
@@ -54,7 +58,11 @@
         </activity>
         <activity
             android:name=".FriendProfile"
-            android:label="@string/title_activity_friend_profile" >
+            android:label="@string/title_activity_friend_profile"
+            android:parentActivityName=".FriendsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FriendsActivity"/>
         </activity>
     </application>
 
