@@ -138,7 +138,7 @@ public class Person implements Serializable {
     private long[] countMessages = new long[] {0, 0};
     private long[] countWords = new long[] {0, 0};
     private long[] countChars = new long[] {0, 0};
-    private long[] countEmoji = new long[] {0, 0};
+//    private long[] countEmoji = new long[] {0, 0};
 
     // Stats for Response Time
     private boolean meSentLast = false;
@@ -146,18 +146,7 @@ public class Person implements Serializable {
     private BigInteger totalResponseTime = BigInteger.ZERO;
     private int numResponseInstances = 0;
 
-    //Rankings
-    private int profRank;
-    private int narcRank;
-    private int sesqRank;
-    private int krunkRank;
-    private int loveRank;
-    private int stalkRank;
-    private int laughRank;
-    private int knowRank;
-    private int basicRank;
-    private int triggerRank;
-    private int novelRank;
+
 
      public Person(String number, String inputName, String ID) {
          this.myContact = number;
@@ -275,6 +264,9 @@ public class Person implements Serializable {
      * @return the total number of text messages
      */
     public long getTotalMessages(int sentToThem) {
+        if (countMessages[sentToThem] == 0) {
+            throw new IllegalStateException("Don't know how to handle this.");
+        }
         return countMessages[sentToThem];
     }
 
@@ -284,6 +276,9 @@ public class Person implements Serializable {
      * @return the total number of words
      */
     public long getTotalWords(int sentToThem) {
+        if (countWords[sentToThem] == 0) {
+            throw new IllegalStateException("Don't know how to handle this either.");
+        }
         return countWords[sentToThem];
     }
 
@@ -293,6 +288,9 @@ public class Person implements Serializable {
      * @return the total number of alphabetic characters
      */
     public long getTotalChars(int sentToThem) {
+        if (countChars[sentToThem] == 0) {
+            throw new IllegalStateException("Neither can I handle this.");
+        }
         return countChars[sentToThem];
     }
 
