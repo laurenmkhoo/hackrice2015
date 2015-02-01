@@ -1,13 +1,14 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.View;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,12 +21,13 @@ import android.widget.Toast;
 
 
 /**
- * Main Activity.
+ * Main Activity. Displays a list of numbers.
  *
  */
 
 public class MainActivity extends ActionBarActivity {
-    private ArrayList<Person> peopleList;
+    private static final String PREFS_NAME = "preferences";
+    public static ArrayList<Person> PEOPLE_LIST = new ArrayList<Person>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +35,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // font manipulation occurs from here
-        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "button");
+        ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.fun), "button");
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
         for (int i = 0; i < views.size(); i++) {
             TextView tv = (TextView)(views.get(i));
             tv.setTypeface(tf);
         }
-
-        ArrayList <View> viewsBold = getViewsByTag((ViewGroup)findViewById(R.id.activitymain), "header");
+        // More font manipulation
+        ArrayList <View> viewsBold = getViewsByTag((ViewGroup) findViewById(R.id.fun), "header");
         Typeface tfBold = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_INLINE.otf");
         for (int i = 0; i < viewsBold.size(); i++) {
             TextView tvBold = (TextView)(viewsBold.get(i));
@@ -54,56 +56,37 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-        // Check if redirected
-        if (getIntent() != null && getIntent().getExtras() != null &&
-                getIntent().getExtras().get(Rankings.PEOPLE_LIST) != null) {
-            peopleList = (ArrayList<Person>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+        if (MessageListActivity.getUserPerson() == null) {
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         }
+        // Turn off buttons when they won't work
+        ((Button) findViewById(R.id.main_btn_me)).setClickable(
+                MessageListActivity.getUserPerson() == null);
+        ((Button) findViewById(R.id.main_btn_friends)).setClickable(
+                MessageListActivity.getUserPerson() == null);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * Goes to FriendProfile with userPerson
-     * @param view the view
-     */
     public void goToMyProfile(View view) {
-        if (peopleList == null){
-            Toast.makeText(getApplicationContext(), "Please run ANALYZE first.", Toast.LENGTH_LONG).show();
+        if (MessageListActivity.getUserPerson() == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(this, FriendProfile.class);
             intent.putExtra(FriendProfile.PERSON, MessageListActivity.userPerson);
-            intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
             startActivity(intent);
         }
     }
 
-    /**
-     * Analyzes texts and goes to Rankings
-     * @param view the view
-     */
     public void onAnalyze(View view) {
         startActivity(new Intent(this, MessageListActivity.class));
     }
 
-    /**
-     * Goes to FriendActivity
-     * @param view
-     */
+
     public void goToFriends(View view){
-        if (peopleList == null){
+        if (MessageListActivity.getSMSPeople() == null){
             Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
         } else {
-            Intent intent = new Intent(this, FriendsActivity.class);
-            intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
-            startActivity(intent);
+
+            startActivity(new Intent(this, FriendsActivity.class));
         }
     }
 
@@ -149,6 +132,60 @@ public class MainActivity extends ActionBarActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 result = "Error: idk.";
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onDestroy();
+
+        SerializationUtil serial = new SerializationUtil();
+        //serialize to file
+        serial.startSerialize("saved_instance.txt");
+        for (Person p: MainActivity.PEOPLE_LIST) {
+            try {
+                serial.serialize(p);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        serial.serializeFinish();
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("loadedBefore", true);
+
+        // Commit the edits!
+        editor.commit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean loadedBefore = settings.getBoolean("loadedBefore", false);
+
+        if (loadedBefore) {
+            SerializationUtil serial = new SerializationUtil();
+            serial.startDeserialize("saved_instance.txt");
+
+            MainActivity.PEOPLE_LIST = new ArrayList<Person>();
+
+            try {
+                while (true) {
+                    MainActivity.PEOPLE_LIST.add((Person)serial.deserialize());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                serial.deserializeFinish();
             }
         }
     }
