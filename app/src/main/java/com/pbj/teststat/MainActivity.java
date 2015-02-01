@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
         } else {
             Intent intent = new Intent(this, FriendProfile.class);
             intent.putExtra(FriendProfile.PERSON, MessageListActivity.fartbox);
-            startActivity(new Intent(this, FriendProfile.class));
+            startActivity(intent);
         }
     }
 
