@@ -37,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // font manipulation occurs from here
         ArrayList <View> views = getViewsByTag((ViewGroup)findViewById(R.id.fun), "button");
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
         for (int i = 0; i < views.size(); i++) {
@@ -50,8 +51,6 @@ public class MainActivity extends ActionBarActivity {
             TextView tvBold = (TextView)(viewsBold.get(i));
             tvBold.setTypeface(tfBold);
         }
-
-        loadFiles();
     }
 
     /**
