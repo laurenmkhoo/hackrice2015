@@ -10,35 +10,61 @@ public class AllCategories {
             "fuck", "fag", "gay", "gringo", "homo", "nigger", "niggah", "penis", "poonani", "prick", "pussy", "queer",
             "rimjob", "shit", "sex", "slut", "skank", "spick", "tit", "twat", "wank", "whore"};
 
+    private static final String[] VANITY_TAGS = new String[] {"i", "me", "my", "moi"};
+    private static final String[] PARTY_TAGS = new String[] {};
+
+
 
     private static final Category[] categories = new Category[] {
 
-        /*
-         * PROFANITY DETECTION
-         */
-        new Category() {
-            public int analyzeText(String text) {
-                text = text.toLowerCase();
-                int count = 0;
-                for (int i = 0; i < text.length(); i++) {
-                    for (String profanity : PROFANITY_TAGS) {
-                        if (text.startsWith(profanity, i)) {
-                            count++;
-                        }
-                    }
+            /*
+             * PROFANITY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, PROFANITY_TAGS);
                 }
-                return count;
-            }
-        },
+            },
 
-        // SOMETHING ELSE
-        new Category() {
-            public int analyzeText(String text) {
-                // WHATEVER NEEDS TO BE DONE
-                return 0;
+            /*
+             * VANITY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, VANITY_TAGS);
+                }
+            },
+
+            /*
+             * PARTY DETECTION
+             */
+            new Category() {
+                public int analyzeText(String text) {
+                    return countTagInstances(text, PARTY_TAGS);
+                }
+            }
+
+
+
+    };
+
+    /**
+     * TEXT BETTER BE IN LOWER CASE BY NOW!
+     * @param text
+     * @param tags
+     * @return
+     */
+    private static final int countTagInstances(String text, final String[] tags) {
+        int count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            for (String tag : tags) {
+                if (text.startsWith(tag, i)) {
+                    count++;
+                }
             }
         }
-    };
+        return count;
+    }
 
 
     /**

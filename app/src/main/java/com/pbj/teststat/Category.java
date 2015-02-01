@@ -6,5 +6,10 @@ package com.pbj.teststat;
 
 public interface Category {
 
+    /**
+     *
+     * @param text MUST BE IN LOWER CASE
+     * @return
+     */
     public abstract int analyzeText(String text);
 }
