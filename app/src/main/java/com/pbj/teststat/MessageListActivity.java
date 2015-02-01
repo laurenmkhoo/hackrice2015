@@ -23,6 +23,9 @@ import java.util.List;
 
 public class MessageListActivity extends ListActivity {
 
+    //List<SMSData> smsList= new ArrayList<SMSData>();
+    //static HashMap<String, Person> smsPeople = new HashMap<String, Person>();
+
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
     static Person userPerson;
@@ -31,11 +34,9 @@ public class MessageListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean firstTime = getIntent().getExtras().getBoolean("FIRST_TIME");
-
-        if (firstTime) {
-
-        }
+        SharedPreferences settings = getSharedPreferences("sms", 0);
+        String last_sms_id = settings.getString("lastsms", "");
+        String new_sms_id = "";
 
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
@@ -48,8 +49,11 @@ public class MessageListActivity extends ListActivity {
 
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
-            Log.d("Line 43", c.getString(c.getColumnIndexOrThrow("body")).toString());
             for(int i=0; i < /*c.getCount()*/ 200; i++) {
+                if (i == 0) {
+                    new_sms_id = c.getString(c.getColumnIndexOrThrow("_id")).toString();
+                }
+
                 SMSData sms = new SMSData();
                 String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
                 sms.setBody(messageBody);
@@ -67,6 +71,7 @@ public class MessageListActivity extends ListActivity {
                     sms.setFolderName(SMSData.OUTBOX);
                 }
 
+
                 smsList.add(sms);
                 if (!smsPeople.containsKey(contactID)) {
                     Person newPerson = new Person(contactNumber, contactName, contactID);
@@ -81,10 +86,25 @@ public class MessageListActivity extends ListActivity {
                 }
                 userPerson.update(sms);
 
+                // found the most recent sms
+                /*
+                if (c.getString(c.getColumnIndexOrThrow("_id")).toString().equals(last_sms_id)) {
+                    break;
+                }
+                */
                 c.moveToNext();
             }
         }
         c.close();
+
+        last_sms_id = new_sms_id;
+
+        SharedPreferences smssettings = getSharedPreferences("sms", 0);
+        SharedPreferences.Editor editor = smssettings.edit();
+        editor.putString("lastsms", last_sms_id);
+
+        // Commit the edits!
+        editor.commit();
 
         MainActivity.peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
