@@ -10,6 +10,7 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ public class MessageListActivity extends ListActivity {
 
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
+    static Person fartbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class MessageListActivity extends ListActivity {
 
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
+        TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        fartbox = new Person(tele.getLine1Number(), tele.getSimOperatorName());
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -65,6 +69,13 @@ public class MessageListActivity extends ListActivity {
                     smsPeople.put(contactID, newPerson);
                 }
                 smsPeople.get(contactID).update(sms);
+
+                if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
+                    sms.setFolderName(SMSData.OUTBOX);
+                } else {
+                    sms.setFolderName(SMSData.INBOX);
+                }
+                fartbox.update(sms);
 
                 c.moveToNext();
             }
@@ -145,8 +156,35 @@ public class MessageListActivity extends ListActivity {
         return contactID;
     }
 
+    private String getMyProfile(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,new String[] { ContactsContract.Contacts.LOOKUP_KEY }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactID = null;
+        if (cursor.moveToFirst()) {
+            contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactID;
+    }
+
     public static HashMap<String, Person> getSMSPeople(){
+        if (smsPeople == null){
+            return null;
+        }
         return smsPeople;
+    }
+
+    public static Person getMe(){
+        if (fartbox == null){
+            return null;
+        }
+        return fartbox;
     }
 
 }

@@ -64,7 +64,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void goToMyProfile(View view) {
-        startActivity(new Intent(this, MyProfile.class));
+        if (MessageListActivity.getMe() == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        } else {
+            startActivity(new Intent(this, MyProfile.class));
+        }
     }
 
     public void onMessageButtonClick(View view) {
@@ -72,7 +76,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void goToFriends(View view){
-        startActivity(new Intent(this, FriendsActivity.class));
+        if (MessageListActivity.getSMSPeople() == null){
+            Toast.makeText(getApplicationContext(), "Please run ANALYZE.", Toast.LENGTH_LONG).show();
+        } else {
+            startActivity(new Intent(this, FriendsActivity.class));
+        }
     }
 
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
