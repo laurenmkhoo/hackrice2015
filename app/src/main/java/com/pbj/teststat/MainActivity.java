@@ -66,7 +66,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void goToMyProfile(View view) {
-        startActivity(new Intent(this, MyProfile.class));
+        Intent intent = new Intent(this, MyProfile.class);
+        startActivity(intent);
     }
 
     public void onMessageButtonClick(View view) {
