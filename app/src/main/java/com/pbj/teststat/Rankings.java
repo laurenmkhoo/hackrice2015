@@ -70,7 +70,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), descriptions.get(parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
         selectedCategory = parent.getItemAtPosition(position).toString();
     }
 
