@@ -44,7 +44,7 @@ public class Person {
      * Updates all my parameters.
      * @param textMessage
      */
-    public void update(SMSData textMessage) {
+/*    public void update(SMSData textMessage) {
         assert (textMessage != null);
         boolean meSentToThem = textMessage.getFolderName() == SMSData.OUTBOX;
 
@@ -74,7 +74,7 @@ public class Person {
     /**
      * ONLY counts alphabetical characters into totalChars
      * @param text
-     */
+
     public void countMessagesAndWordsAndChars(final String text, final int sentToThem) {
         assert (text != null);
         char c;
@@ -130,7 +130,7 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-    public long getTotalMessages(int sentToThem) {
+/*    public long getTotalMessages(int sentToThem) {
         return countMessages[sentToThem];
     }
 
@@ -139,7 +139,7 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-    public long getTotalWords(int sentToThem) {
+/*    public long getTotalWords(int sentToThem) {
         return countWords[sentToThem];
     }
 
@@ -148,7 +148,7 @@ public class Person {
      * @param sentToThem either Person.SENT_TO_THEM or Person.RECEIVED_FROM_THEM
      * @return
      */
-    public long getTotalChars(int sentToThem) {
+/*    public long getTotalChars(int sentToThem) {
         return countChars[sentToThem];
     }
 

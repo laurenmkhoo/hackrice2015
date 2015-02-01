@@ -1,6 +1,8 @@
 package com.pbj.teststat;
 
 import android.app.ListActivity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -41,6 +43,7 @@ public class MessageListActivity extends ListActivity {
                 sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
                 sms.setId(c.getString(c.getColumnIndexOrThrow("_id")).toString());
                 sms.setTime(c.getString(c.getColumnIndexOrThrow("date")).toString());
+                sms.setName(getContactName(getApplicationContext(), c.getString(c.getColumnIndexOrThrow("address"))));
 
                 if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
                     sms.setFolderName(SMSData.INBOX);
@@ -93,6 +96,23 @@ public class MessageListActivity extends ListActivity {
         Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_SHORT).show();
         Log.d("onListItemClick", sms.getBody());
 
+    }
+
+    public String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,new String[] { ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactName;
     }
 
 }
