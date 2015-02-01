@@ -1,9 +1,17 @@
 package com.pbj.teststat;
 
+import android.app.Activity;
+import android.content.res.Resources;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Hellemn on 1/31/2015.
  */
-public class AllCategories {
+public class AllCategories extends Activity {
 
     private static final String[] PROFANITY_TAGS = new String[] {"anal", "ass", "bastard", "beaner", "bitch", "boner", "fellatio",
             "camel toe", "chode", "clit", "cooch", "cock", "cum", "cunnilingus", "cunt", "damn", "dam", "dick", "douche",
@@ -51,6 +59,5 @@ public class AllCategories {
 
 
     private AllCategories() {
-
     }
 }

@@ -1,6 +1,7 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -8,8 +9,13 @@ import android.util.Log;
 import android.view.View;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import android.app.ListActivity;
 import android.database.Cursor;
@@ -44,6 +50,8 @@ public class MainActivity extends ActionBarActivity {
             TextView tvBold = (TextView)(viewsBold.get(i));
             tvBold.setTypeface(tfBold);
         }
+
+        loadFiles();
     }
 
     /**
@@ -77,4 +85,34 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    private void loadFiles() {
+        ArrayList<String> THE_PARTY_ANIMAL_TAGS = new ArrayList<String>();
+
+
+        String result = "";
+        Resources res = getResources();
+        Field [] fields= R.raw.class.getFields();
+
+        for(int count=0; count < fields.length; count++){
+            try {
+                //String tempField = fields[count].getName();
+                //System.out.println("FIELD COUNT: " + fields[count].getInt(fields[count]));
+                //System.out.println("INTEGER OF PARTY ANIMAL: " + R.raw.the_party_animal);
+                InputStream input = res.openRawResource(fields[count].getInt(fields[count]));
+                Scanner scanner = new Scanner(input);
+
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    THE_PARTY_ANIMAL_TAGS.add(line);
+                }
+                scanner.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                result = "Error: idk.";
+            }
+            Log.i("Raw Asset: ", fields[count].getName());
+        }
+
+        System.out.println("RESULTSFILES: " + fields);
+    }
 }
