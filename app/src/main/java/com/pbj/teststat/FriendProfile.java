@@ -46,7 +46,8 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-        ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
+        CustomListAdapter cla = new CustomListAdapter(YourActivity.this , R.layout.custom_textview , mList);
+        ((ListView) findViewById(R.id.listview)).setAdapter(cla);
 
         // Set up back on Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

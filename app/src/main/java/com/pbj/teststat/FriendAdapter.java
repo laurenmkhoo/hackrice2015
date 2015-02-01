@@ -51,12 +51,6 @@ public class FriendAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView)rowView.findViewById(R.id.friendPerson);
         textView.setTypeface(tf);
 
-       if (position % 2 == 1) {
-           rowView.invalidate();
-       }
-       else {
-           //rowView.setBackgroundColor(0xe27e51);
-       }
 
         return rowView;
     }
