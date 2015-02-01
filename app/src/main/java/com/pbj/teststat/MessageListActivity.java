@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Set;
 
 public class MessageListActivity extends ListActivity {
 
@@ -36,7 +37,7 @@ public class MessageListActivity extends ListActivity {
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        fartbox = new Person(tele.getLine1Number(), tele.getSimOperatorName());
+        fartbox = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
 
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
@@ -45,7 +46,7 @@ public class MessageListActivity extends ListActivity {
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
             Log.d("Line 43", c.getString(c.getColumnIndexOrThrow("body")).toString());
-            for(int i=0; i < /*c.getCount()*/ 20; i++) {
+            for(int i=0; i < /*c.getCount()*/ 200; i++) {
                 SMSData sms = new SMSData();
                 String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
                 sms.setBody(messageBody);
@@ -65,7 +66,7 @@ public class MessageListActivity extends ListActivity {
 
                 smsList.add(sms);
                 if (!smsPeople.containsKey(contactID)) {
-                    Person newPerson = new Person(contactNumber, contactName);
+                    Person newPerson = new Person(contactNumber, contactName, contactID);
                     smsPeople.put(contactID, newPerson);
                 }
                 smsPeople.get(contactID).update(sms);
@@ -82,6 +83,12 @@ public class MessageListActivity extends ListActivity {
         }
         System.out.println(smsPeople.keySet());
         c.close();
+
+        ArrayList<Person> peopleList = new ArrayList<Person>();
+        for (String s: smsPeople.keySet()) {
+            peopleList.add(smsPeople.get(s));
+        }
+        MainActivity.PEOPLE_LIST = peopleList;
 
 
         // Set smsList in the ListAdapter
@@ -186,5 +193,4 @@ public class MessageListActivity extends ListActivity {
         }
         return fartbox;
     }
-
 }

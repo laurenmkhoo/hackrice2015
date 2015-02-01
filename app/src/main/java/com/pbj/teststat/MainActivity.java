@@ -30,7 +30,9 @@ import android.widget.Toast;
  * Main Activity. Displays a list of numbers.
  *
  */
+
 public class MainActivity extends ActionBarActivity {
+    public static ArrayList<Person> PEOPLE_LIST = new ArrayList<Person>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class MainActivity extends ActionBarActivity {
     public void onMessageButtonClick(View view) {
         startActivity(new Intent(this, MessageListActivity.class));
     }
+
 
     public void goToFriends(View view){
         if (MessageListActivity.getSMSPeople() == null){
@@ -128,4 +131,5 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
+
 }
