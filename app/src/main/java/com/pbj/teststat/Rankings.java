@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
     String selectedCategory;
     Spinner spinner1;
 
-    private List<PersonWithRank> friends;
+    private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -54,10 +55,13 @@ public class Rankings extends Activity implements OnItemSelectedListener {
         setContentView(R.layout.activity_rankings);
 
         // Get friends from intent, arbitrary ranking at first
-        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
+//        List<Person> personList = (List<Person>) getIntent().getExtras().get(PEOPLE_LIST);
         int i = 0;
-        for (Person p : personList) {
-            friends.add(new PersonWithRank(p, i++));
+        System.out.println("PEOPLE_LIST: " + MainActivity.PEOPLE_LIST);
+        for (Person p : MainActivity.PEOPLE_LIST) {
+            PersonWithRank tempPerson = new PersonWithRank(p, i++);
+            System.out.println("TEMP_PERSON: " + tempPerson);
+            friends.add(tempPerson);
         }
 
         // Make a spinner and other stuff
@@ -118,7 +122,7 @@ public class Rankings extends Activity implements OnItemSelectedListener {
 
 
         public String toString() {
-            return p + "  " + rank;
+            return p.getName() + "  " + rank;
         }
     }
 
