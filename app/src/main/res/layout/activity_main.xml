@@ -1,32 +1,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#f8f4cb"
+    tools:context=".MainActivity"
+    android:id="@+id/fun">
 
-    <TextView android:text="@string/main_activity_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"/>
+    <Button
+        style="@style/button"
+        android:text="Statextics"
+        android:tag="header"
+        android:textSize="100sp"
+        android:textColor="#323c55"
+        android:background="#f8f4cb"
+        android:layout_width="fill_parent"
+        android:layout_height="110dp"/>
 
-    <Button android:text="@string/main_btn_see_current_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="analyzeTexts"/>
+    <Button android:text="Me"
+        android:background="#e26881"
+        android:tag="button"
+        style="@style/button"
+        android:onClick="goToRankings"/>
 
-    <Button android:text="@string/main_btn_analyze_texts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button android:text="friends"
+        android:background="#e27e51"
+        android:tag="button"
+        style="@style/button"
         android:clickable="false"/>
 
-    <Button android:text="@string/main_btn_messages"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button android:text="analyze"
+        android:background="#ae658e"
+        style="@style/button"
+        android:tag="button"
         android:onClick="onMessageButtonClick" />
+
+    <Button
+        style="@style/button"
+        android:text="Hackrice '15"
+        android:tag="header"
+        android:textSize="70sp"
+        android:textColor="#323c55"
+        android:background="#f8f4cb"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"/>
 
 </LinearLayout>
