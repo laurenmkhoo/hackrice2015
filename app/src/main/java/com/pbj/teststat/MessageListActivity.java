@@ -1,8 +1,13 @@
 package com.pbj.teststat;
 
 import android.app.ListActivity;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +30,7 @@ public class MessageListActivity extends ListActivity {
 
         List<SMSData> smsList = new ArrayList<SMSData>();
 
-        Uri uri = Uri.parse("content://sms/inbox");
+        Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
         System.out.println("cursor c: " + c);
 
@@ -36,6 +41,17 @@ public class MessageListActivity extends ListActivity {
                 SMSData sms = new SMSData();
                 sms.setBody(c.getString(c.getColumnIndexOrThrow("body")).toString());
                 sms.setNumber(c.getString(c.getColumnIndexOrThrow("address")).toString());
+                sms.setId(c.getString(c.getColumnIndexOrThrow("_id")).toString());
+                sms.setTime(c.getString(c.getColumnIndexOrThrow("date")).toString());
+                sms.setName(getContactName(getApplicationContext(), c.getString(c.getColumnIndexOrThrow("address"))));
+
+                if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
+                    sms.setFolderName(SMSData.INBOX);
+                } else {
+                    sms.setFolderName(SMSData.OUTBOX);
+                }
+
+
                 smsList.add(sms);
 
                 c.moveToNext();
@@ -43,12 +59,12 @@ public class MessageListActivity extends ListActivity {
         }
         c.close();
 
+
         // Set smsList in the ListAdapter
         setListAdapter(new ListAdapter(this, smsList));
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,6 +96,23 @@ public class MessageListActivity extends ListActivity {
         Toast.makeText(getApplicationContext(), sms.getBody(), Toast.LENGTH_SHORT).show();
         Log.d("onListItemClick", sms.getBody());
 
+    }
+
+    public String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,new String[] { ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactName;
     }
 
 }

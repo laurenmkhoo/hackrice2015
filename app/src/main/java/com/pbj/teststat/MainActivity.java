@@ -46,6 +46,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Called when the
+     * @param view
+     */
+    public void goToRankings(View view) {
+        startActivity(new Intent(this, Rankings.class));
+    }
+
     public void onMessageButtonClick(View view) {
         Intent intent = new Intent(this, MessageListActivity.class);
         startActivity(intent);
