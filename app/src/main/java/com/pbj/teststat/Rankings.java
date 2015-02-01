@@ -95,7 +95,7 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_rankings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
