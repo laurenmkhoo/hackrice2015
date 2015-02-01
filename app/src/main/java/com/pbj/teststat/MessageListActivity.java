@@ -41,7 +41,7 @@ public class MessageListActivity extends ListActivity {
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
             Log.d("Line 43", c.getString(c.getColumnIndexOrThrow("body")).toString());
-            for(int i=0; i < /*c.getCount()*/ 20; i++) {
+            for(int i=0; i < /*c.getCount()*/ 100; i++) {
                 SMSData sms = new SMSData();
                 String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
                 sms.setBody(messageBody);

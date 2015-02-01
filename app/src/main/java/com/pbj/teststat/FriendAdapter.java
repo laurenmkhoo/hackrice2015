@@ -1,12 +1,17 @@
 package com.pbj.teststat;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +22,7 @@ import java.util.Map;
 public class FriendAdapter extends ArrayAdapter<String> {
     private final HashMap<String, Person> personMap;
     private final List<String> numberList;
+    Typeface tf;
 
     // List context
     private final Context context;
@@ -26,6 +32,7 @@ public class FriendAdapter extends ArrayAdapter<String> {
         personMap = map;
         numberList = new ArrayList(map.keySet());
         context = inputContext;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
     }
 
 
@@ -39,6 +46,19 @@ public class FriendAdapter extends ArrayAdapter<String> {
 
         senderPerson.setText(personMap.get(numberList.get(position)).getName());
 
+        TextView textView = (TextView)rowView.findViewById(R.id.friendPerson);
+        textView.setTypeface(tf);
+
+       if (position % 2 == 1) {
+           rowView.invalidate();
+       }
+       else {
+           //rowView.setBackgroundColor(0xe27e51);
+       }
+
         return rowView;
     }
+
+
+
 }
