@@ -14,6 +14,7 @@ public class SMSData {
     private String id;
     private String time;
     private String folderName;
+    private String name;
 
     public String getNumber() {
         return number;
@@ -54,6 +55,10 @@ public class SMSData {
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
+
+    public String getName(){return name;}
+
+    public void setName(String contact){this.name = contact;}
 
 
 }
