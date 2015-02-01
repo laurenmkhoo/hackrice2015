@@ -35,7 +35,6 @@ public class FriendAdapter extends ArrayAdapter<String> {
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/BLANCH_CONDENSED_LIGHT.otf");
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,12 +51,6 @@ public class FriendAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView)rowView.findViewById(R.id.friendPerson);
         textView.setTypeface(tf);
 
-       if (position % 2 == 1) {
-           rowView.invalidate();
-       }
-       else {
-           //rowView.setBackgroundColor(0xe27e51);
-       }
 
         return rowView;
     }

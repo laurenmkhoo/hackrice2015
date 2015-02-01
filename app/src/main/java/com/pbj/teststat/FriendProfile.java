@@ -1,6 +1,7 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -45,7 +46,8 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
         ArrayAdapter<ListData> adapter = new ArrayAdapter<ListData>(this,
                 android.R.layout.simple_list_item_1, values);
-        ((ListView) findViewById(R.id.listview)).setAdapter(adapter);
+        CustomListAdapter cla = new CustomListAdapter(YourActivity.this , R.layout.custom_textview , mList);
+        ((ListView) findViewById(R.id.listview)).setAdapter(cla);
 
         // Set up back on Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,21 +87,7 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
             // Back Button
             case android.R.id.home:
-                intent = NavUtils.getParentActivityIntent(this);
-                intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
-                if (NavUtils.shouldUpRecreateTask(this, intent)) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(intent)
-                                    // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, intent);
-                }
+                onBackPressed();
                 return true;
 
             // Somehow picked something else
@@ -112,6 +100,25 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = NavUtils.getParentActivityIntent(this);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        if (NavUtils.shouldUpRecreateTask(this, intent)) {
+            // This activity is NOT part of this app's task, so create a new task
+            // when navigating up, with a synthesized back stack.
+            TaskStackBuilder.create(this)
+                    // Add all of this activity's parents to the back stack
+                    .addNextIntentWithParentStack(intent)
+                            // Navigate up to the closest parent
+                    .startActivities();
+        } else {
+            // This activity is part of this app's task, so simply
+            // navigate up to the logical parent activity.
+            NavUtils.navigateUpTo(this, intent);
+        }
     }
 
     @Override
@@ -136,6 +143,32 @@ public class FriendProfile extends ActionBarActivity implements OnItemSelectedLi
 
         public String toString() {
             return this.categoryName + " " + "[" +  this.value + "]";
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onPause();
+        String allPeople = "";
+        for (Person p: MainActivity.peopleList) {
+            allPeople += p.getStringRepresentation() + ",";
+        }
+
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("allPeople", allPeople);
+        editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
         }
     }
 }

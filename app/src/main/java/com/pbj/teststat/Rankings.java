@@ -1,6 +1,7 @@
 package com.pbj.teststat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -225,6 +226,32 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
 
     public void goToMain(){
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+
+    @Override
+    public void onPause() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onPause();
+        String allPeople = "";
+        for (Person p: MainActivity.peopleList) {
+            allPeople += p.getStringRepresentation() + ",";
+        }
+
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("allPeople", allPeople);
+        editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
+        }
     }
 
 }

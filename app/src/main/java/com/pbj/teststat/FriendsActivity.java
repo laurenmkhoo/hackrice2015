@@ -1,9 +1,13 @@
 package com.pbj.teststat;
 
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Button;
+
 
 import java.util.ArrayList;
 
@@ -34,6 +39,9 @@ public class FriendsActivity extends ListActivity {
 
         // Save people list for future
         peopleList = (ArrayList<String>) getIntent().getExtras().get(Rankings.PEOPLE_LIST);
+
+        // Set up back on Action Bar
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -41,22 +49,60 @@ public class FriendsActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_friends, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Intent intent;
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            // Go Home
+            case R.id.friends_activity_to_home:
+                intent = new Intent(this, MainActivity.class);
+                break;
+
+            // Go to Friends list
+            case R.id.friends_activity_to_rankings:
+                intent = new Intent(this, FriendsActivity.class);
+                break;
+
+            // Back Button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+
+            // Somehow nothing picked
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
+        // Go where we decided to go
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+        startActivity(intent);
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = NavUtils.getParentActivityIntent(this);
+        intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
+
+        if (NavUtils.shouldUpRecreateTask(this, intent)) {
+            // This activity is NOT part of this app's task, so create a new task
+            // when navigating up, with a synthesized back stack.
+            TaskStackBuilder.create(this)
+                    // Add all of this activity's parents to the back stack
+                    .addNextIntentWithParentStack(intent)
+                            // Navigate up to the closest parent
+                    .startActivities();
+        } else {
+            // This activity is part of this app's task, so simply
+            // navigate up to the logical parent activity.
+            NavUtils.navigateUpTo(this, intent);
+        }
     }
 
     private static ArrayList<View> getViewsByTag(ViewGroup root, String tag){
@@ -82,6 +128,32 @@ public class FriendsActivity extends ListActivity {
                 MessageListActivity.getSMSPeople().get(((Button) view).getContentDescription()));
         intent.putExtra(Rankings.PEOPLE_LIST, peopleList);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onPause() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        super.onPause();
+        String allPeople = "";
+        for (Person p: MainActivity.peopleList) {
+            allPeople += p.getStringRepresentation() + ",";
+        }
+
+        SharedPreferences settings = getSharedPreferences("preferences", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("allPeople", allPeople);
+        editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
+        }
     }
 
 }
