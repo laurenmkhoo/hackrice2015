@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
@@ -87,6 +88,24 @@ public class MainActivity extends ActionBarActivity {
 
                     peopleList.add(p);
                 }
+            }
+
+            // For yourself.
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            String you = youSettings.getString("you", "");
+            if (!you.equals("")) {
+                String [] person = you.split(",");
+
+                String [] x = person[0].split(";");
+
+                Person p = new Person(x[2], x[1], x[0]);
+                p.setSpecialCounts(Long.parseLong(x[3]), Long.parseLong(x[4]), Long.parseLong(x[5]), Long.parseLong(x[6]), Long.parseLong(x[7]), Long.parseLong(x[8]));
+                p.setCountMessages(Long.parseLong(x[9]), Long.parseLong(x[10]));
+                p.setCountWords(Long.parseLong(x[11]), Long.parseLong(x[12]));
+                p.setCountChars(Long.parseLong(x[13]), Long.parseLong(x[14]));
+
+                MessageListActivity.userPerson = p;
+
             }
         }
 
@@ -199,13 +218,20 @@ public class MainActivity extends ActionBarActivity {
         for (Person p: peopleList) {
             allPeople += p.getStringRepresentation() + ",";
         }
-
+        // For contacts
         SharedPreferences settings = getSharedPreferences("preferences", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("allPeople", allPeople);
-
-        // Commit the edits!
         editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
+        }
+
     }
 
 

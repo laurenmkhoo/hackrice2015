@@ -23,37 +23,28 @@ import java.util.List;
 
 public class MessageListActivity extends ListActivity {
 
-    //List<SMSData> smsList= new ArrayList<SMSData>();
-    //static HashMap<String, Person> smsPeople = new HashMap<String, Person>();
-
     List<SMSData> smsList;
     static HashMap<String, Person> smsPeople;
-    static Person userPerson;
+
+    public static Person userPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences settings = getSharedPreferences("sms", 0);
-        String last_sms_id = settings.getString("lastsms", "");
-        String new_sms_id = "";
 
         smsList = new ArrayList<SMSData>();
         smsPeople = new HashMap<String, Person>();
         TelephonyManager tele = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         userPerson = new Person(tele.getLine1Number(), tele.getSimOperatorName(), "meeeeee");
 
+
+
         Uri uri = Uri.parse("content://sms/");
         Cursor c= getContentResolver().query(uri, null, null ,null,null);
-        System.out.println("cursor c: " + c);
 
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
             for(int i=0; i < /*c.getCount()*/ 200; i++) {
-                if (i == 0) {
-                    new_sms_id = c.getString(c.getColumnIndexOrThrow("_id")).toString();
-                }
-
                 SMSData sms = new SMSData();
                 String messageBody = c.getString(c.getColumnIndexOrThrow("body")).toString();
                 sms.setBody(messageBody);
@@ -86,29 +77,16 @@ public class MessageListActivity extends ListActivity {
                 }
                 userPerson.update(sms);
 
-                // found the most recent sms
-                /*
-                if (c.getString(c.getColumnIndexOrThrow("_id")).toString().equals(last_sms_id)) {
-                    break;
-                }
-                */
                 c.moveToNext();
             }
         }
         c.close();
 
-        last_sms_id = new_sms_id;
-
-        SharedPreferences smssettings = getSharedPreferences("sms", 0);
-        SharedPreferences.Editor editor = smssettings.edit();
-        editor.putString("lastsms", last_sms_id);
-
-        // Commit the edits!
-        editor.commit();
-
         MainActivity.peopleList = new ArrayList<Person>();
         for (String s: smsPeople.keySet()) {
-            MainActivity.peopleList.add(smsPeople.get(s));
+            if (smsPeople.get(s).getTotalMessages(Person.RECEIVED_FROM_THEM) > 10) {
+                MainActivity.peopleList.add(smsPeople.get(s));
+            }
         }
 
         // Set smsList in the ListAdapter
@@ -221,10 +199,13 @@ public class MessageListActivity extends ListActivity {
         return smsPeople;
     }
 
+
+
     public static Person getUserPerson(){
         if (userPerson == null){
             return null;
         }
         return userPerson;
     }
+
 }

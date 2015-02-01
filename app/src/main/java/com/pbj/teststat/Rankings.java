@@ -64,6 +64,7 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
     private ArrayList<Person> peopleList;
     private List<PersonWithRank> friends = new ArrayList<PersonWithRank>();
     private ArrayAdapter<PersonWithRank> listAdapter;
+    private static Person.Category selectedCategory = Person.Category.LONG_TEXTS;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -90,8 +91,8 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
         listAdapter = new ArrayAdapter<PersonWithRank>(this, android.R.layout.simple_list_item_1, friends);
         listview.setAdapter(listAdapter);
 
-        // Arbitrarily Pick a Starting Category
-        sortList(Person.Category.LONG_TEXTS.name);
+        // Arbitrarily Picked a Starting Category
+        sortList();
 
         // Set up back on Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -172,24 +173,30 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
                 parent.getItemAtPosition(position).toString()), Toast.LENGTH_LONG).show();
 
         // Select Category and Sort List
-        sortList(parent.getItemAtPosition(position).toString());
+        for (Person.Category cat : Person.Category.values()) {
+            if (cat.name.equals(parent.getItemAtPosition(position).toString())) {
+                selectedCategory = cat;
+            }
+        }
+        sortList();
     }
 
 
-    private void sortList(final String selectedCategory) {
+    private void sortList() {
         // Sort friends
+        final String categoryString = selectedCategory.name;
         listAdapter.sort(new Comparator<PersonWithRank>() {
 
             @Override
             public int compare(PersonWithRank lhs, PersonWithRank rhs) {
-                double comparison = rhs.p.getRatingFor(selectedCategory) - lhs.p.getRatingFor(selectedCategory);
+                double comparison = rhs.p.getRatingFor(categoryString) - lhs.p.getRatingFor(categoryString);
                 return comparison > 0 ? 1 : -1;
             }
         });
 
         // Update friends' ranks for appearance
         for (PersonWithRank p : friends) {
-            p.value = p.p.getRatingFor(selectedCategory);
+            p.value = p.p.getRatingFor(categoryString);
         }
     }
 
@@ -220,7 +227,7 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
                 display = p.getNumber();
             }
 
-            return display + "  " + Math.floor(value * 100)/100;
+            return display + "  " + Math.floor(value * 100)/100 + " " + selectedCategory.description;
         }
     }
 
@@ -243,9 +250,15 @@ public class Rankings extends ActionBarActivity implements OnItemSelectedListene
         SharedPreferences settings = getSharedPreferences("preferences", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("allPeople", allPeople);
-
-        // Commit the edits!
         editor.commit();
+
+        // For yourself.
+        if (MessageListActivity.userPerson != null) {
+            SharedPreferences youSettings = getSharedPreferences("youPreferences", 0);
+            SharedPreferences.Editor youEditor = youSettings.edit();
+            youEditor.putString("you", MessageListActivity.userPerson.getStringRepresentation());
+            youEditor.commit();
+        }
     }
 
 }
