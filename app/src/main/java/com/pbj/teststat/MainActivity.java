@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.View;
 
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -129,6 +131,42 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
                 result = "Error: idk.";
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        SerializationUtil serial = new SerializationUtil("savedInstance.txt", "savedInstance.txt");
+        //serialize to file
+        for (Person p: MainActivity.PEOPLE_LIST) {
+            try {
+                serial.serialize(p);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        serial.outputFinish();
+
+    }
+
+    @Override
+    public void onStart() {
+        SerializationUtil serial = new SerializationUtil("savedInstance.txt", "savedInstance.txt");
+        MainActivity.PEOPLE_LIST = new ArrayList<Person>();
+
+        try {
+            while (true) {
+                MainActivity.PEOPLE_LIST.add((Person)serial.deserialize());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            serial.inputFinish();
         }
     }
 
