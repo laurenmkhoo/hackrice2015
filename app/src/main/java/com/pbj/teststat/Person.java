@@ -1,8 +1,7 @@
 package com.pbj.teststat;
 
 
-import android.provider.ContactsContract;
-
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,25 +10,22 @@ import java.util.List;
 /**
  * Created by Hellemn on 1/31/2015.
  */
-public class Person {
+public class Person implements Serializable {
     public static final int SENT_TO_THEM = 0;
     public static final int RECEIVED_FROM_THEM = 1;
 
+    // for Serialization
+    private static final long serialVersionUID = 0l;
 
-    private String name; // may be superfluous
-    private String myContact;
-    private HashMap<Category, Long> stats = new HashMap<Category, Long>();
+    // TAGS
     private static final ArrayList<String> PROFANITY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> VANITY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> PARTY_TAGS = new ArrayList<String>();
     private static final ArrayList<String> LAUGH_TAGS = new ArrayList<String>();
     private static final ArrayList<String> KNOW_NOTHING_TAGS = new ArrayList<String>();
     private static final ArrayList<String> BASIC_TAGS = new ArrayList<String>();
-
-    public static final HashMap<String, ArrayList<String>> tagMap;
-    static
-    {
-        tagMap = new HashMap<String, ArrayList<String>>();
+    public static final HashMap<String, ArrayList<String>> tagMap = new HashMap<String, ArrayList<String>>();
+    static {
         tagMap.put("profanity_tags", PROFANITY_TAGS);
         tagMap.put("vanity_tags", VANITY_TAGS);
         tagMap.put("party_tags", PARTY_TAGS);
@@ -39,6 +35,7 @@ public class Person {
 
     }
 
+    // Maps Category Names to Formulas and Indices
     public static enum Category {
         MOST_PROFANE(0, "Most Profane", PROFANITY_TAGS, new Formula() {
             @Override
@@ -131,8 +128,9 @@ public class Person {
     }
 
 
-    private String personName; // may be superfluous
-  //  private ContactsContract.Contacts myContact;
+    // Personal Statistics
+    private String personName;
+    private String phoneNumber;
     private long[] specialCounts = new long[6];
 
     // Counts of stuff
@@ -161,14 +159,14 @@ public class Person {
     private int novelRank;
 
      public Person(String number, String inputName){
-        myContact = number;
+        phoneNumber = number;
         personName = inputName;
     }
 
     public String getName() {
         return personName;
     }
-    public String getNumber(){ return myContact;}
+    public String getNumber(){ return phoneNumber;}
     /**
      * Updates all my parameters.
      * @param textMessage the text message
