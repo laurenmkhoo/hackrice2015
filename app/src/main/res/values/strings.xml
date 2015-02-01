@@ -30,5 +30,6 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_friend_profile">FriendProfile</string>
     <string name="title_activity_my_profile">MyProfile</string>
+    <string name="loading">GETTING STATS</string>
 
 </resources>
